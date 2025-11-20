@@ -29,7 +29,8 @@
 *   待定
 
 ## 4. 技术栈 (Tech Stack)
+
 *   **开发语言**: Python
-*   **核心算法**: 红黑树（Red Black Tree）, 普通树（General Tree）
+*   **核心算法**: 线段树（Segment Tree）, 普通树（General Tree）
 
 ## 未完待续。。。
