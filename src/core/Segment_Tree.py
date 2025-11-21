@@ -2,20 +2,22 @@ class LessonSegmentTree:
     def __init__(self, total_slots):
         self.n = total_slots
         self.tree = [0] * (4 * (self.n + 1))
-        self.lazy = [0] * (4 * (self.n + 1))
+        self.lazy = [-1] * (4 * (self.n + 1))
 
     def pushdown(self, node, start, end):
-        if self.lazy[node] != 0:
+        if self.lazy[node] != -1:
             mid = (start + end) // 2
             left, right = 2 * node, 2 * node + 1
 
+            val = self.lazy[node]
+
             self.tree[left] = self.lazy[node] * (mid - start + 1)
-            self.lazy[left] = self.lazy[node]
+            self.lazy[left] = val
             
             self.tree[right] = self.lazy[node] * (end - mid)
-            self.lazy[right] = self.lazy[node]
+            self.lazy[right] = val
             
-            self.lazy[node] = 0
+            self.lazy[node] = -1
 
     def update(self, L, R, val):
         self._update(1, 1, self.n, L, R, val)
@@ -26,7 +28,7 @@ class LessonSegmentTree:
             self.lazy[node] = val
             return
 
-        self.push_down(node, start, end)
+        self.pushdown(node, start, end)
         mid = (start + end) // 2
         
         if L <= mid:
@@ -43,7 +45,7 @@ class LessonSegmentTree:
         if L <= start and end <= R:
             return self.tree[node]
         
-        self.push_down(node, start, end)
+        self.pushdown(node, start, end)
         mid = (start + end) // 2
         res = 0
         
