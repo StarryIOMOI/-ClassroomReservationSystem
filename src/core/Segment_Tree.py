@@ -26,7 +26,7 @@ class LessonSegmentTree:
             self.lazy[node] = val
             return
 
-        self._push_down(node, start, end)
+        self.push_down(node, start, end)
         mid = (start + end) // 2
         
         if L <= mid:
@@ -43,7 +43,7 @@ class LessonSegmentTree:
         if L <= start and end <= R:
             return self.tree[node]
         
-        self._push_down(node, start, end)
+        self.push_down(node, start, end)
         mid = (start + end) // 2
         res = 0
         
