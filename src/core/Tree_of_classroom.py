@@ -1,4 +1,8 @@
 import sqlite3
+from core import Buildings
+from core import Areas
+from core import Floors
+from core import Classrooms
 from models import get_connection
 
 class TreeNode:
