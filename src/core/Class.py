@@ -24,4 +24,4 @@ class Classrooms:
           self.name = classroom_name
           self.floor_id = floor_id
           self.status = status
-          
+          self.schedule = []

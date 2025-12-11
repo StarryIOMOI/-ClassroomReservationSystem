@@ -122,6 +122,18 @@ def init_db():
             CONSTRAINT uniq_classroom_id UNIQUE (classroom_id)
         );
         ''')
+        
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS semester (
+            semester_id INTEGER NOT NULL,
+            semester_name TEXT NOT NULL,
+            data_start TEXT NOT NULL,
+            data_end TEXT NOT NULL,
+            total_weeks TEXT NOT NULL,
+                       
+            CONSTRAINT uniq_semester_id UNIQUE (semester_id)
+        );
+        ''')
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS courses (
