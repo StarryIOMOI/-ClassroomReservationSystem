@@ -127,8 +127,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS semester (
             semester_id INTEGER NOT NULL,
             semester_name TEXT NOT NULL,
-            data_start TEXT NOT NULL,
-            data_end TEXT NOT NULL,
+            date_start TEXT NOT NULL,
+            date_end TEXT NOT NULL,
             total_weeks TEXT NOT NULL,
                        
             CONSTRAINT uniq_semester_id UNIQUE (semester_id)

@@ -25,3 +25,17 @@ class Classrooms:
           self.floor_id = floor_id
           self.status = status
           self.schedule = []
+
+class Semesters:
+     def __init__(self, semester_id, semester_name, start, end, total_week):
+          self.id = semester_id
+          self.name = semester_name
+          self.start = start
+          self.end = end
+          self.week = total_week
+
+class Timenow:
+     def __init__(self, id, name, week):
+          self.id = id
+          self.name = name
+          self.week = week

@@ -56,7 +56,7 @@ def load_data():
     ]
 
     conn.close()
-    return buildings, classrooms
+    return buildings, areas, floors, classrooms
 
 def build_tree(buildings, areas, floors, classrooms):
     root = TreeNode(0, "Campus", "Campus")

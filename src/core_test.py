@@ -2,7 +2,9 @@ from core import Buildings
 from core import Areas
 from core import Floors
 from core import Classrooms
+from core import Semesters
 from core import build_tree
+from core import locate_time
 
 def print_tree(node, indent=""):
     print(f"{indent}└── {node.name} (id={node.id}, type={node.type})")
@@ -46,3 +48,15 @@ if __name__ == "__main__":
     # 打印树结构
     print("校园层级结构：")
     print_tree(campus_tree)
+
+    semesters = [
+    Semesters(1, "2025春季学期", "2025-02-26", "2025-07-15", 20),
+    Semesters(2, "2025秋季学期", "2025-09-04", "2026-01-20", 20),
+    ]
+
+    #当前学期情况
+    time_locate = locate_time(semesters)
+
+    #打印时间
+    print("\n当前时间:")
+    print(f"{time_locate.id},{time_locate.name},{time_locate.week}")
