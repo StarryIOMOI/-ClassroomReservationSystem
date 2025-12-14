@@ -2,6 +2,7 @@ from .Class import Buildings
 from .Class import Areas
 from .Class import Floors
 from .Class import Classrooms
+from .Class import Courses
 from .Class import Semesters
 from .Class import Timenow
 from .Tree_of_classroom import TreeNode

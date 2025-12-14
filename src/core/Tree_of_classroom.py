@@ -65,7 +65,7 @@ def build_tree(buildings, areas, floors, classrooms):
     area_nodes = {}
     floor_nodes = {}
 
-    for b in buildings:
+    for b in buildings: 
         bnode = TreeNode(b.id, b.name, "building")
         building_nodes[b.id] = bnode
         root.add_child(bnode)
@@ -87,4 +87,4 @@ def build_tree(buildings, areas, floors, classrooms):
         cnode = TreeNode(c.id, c.name, "classroom")
         floor_node.add_child(cnode)
 
-    return root
+    return root 

@@ -1,8 +1,8 @@
 class Buildings:
-        def __init__(self, building_id, building_name, status):
-             self.id = building_id
-             self.name = building_name
-             self.status = status
+     def __init__(self, building_id, building_name, status):
+          self.id = building_id
+          self.name = building_name
+          self.status = status
              
 class Areas:
      def __init__(self, area_id, area_name, building_id, status):
@@ -24,8 +24,24 @@ class Classrooms:
           self.name = classroom_name
           self.floor_id = floor_id
           self.status = status
-          self.schedule = []
+          self.course = []
 
+class Courses:
+     def __init__(self, course_id, course_name, class_id, class_name,classroom_id, classroom_name,
+     teacher_id, teacher_name, week_start, week_end, timeslot_id, semester_id):
+          self.id = course_id
+          self.name = course_name
+          self.class_id = class_id
+          self.class_name = class_name
+          self.classroom_id = classroom_id
+          self.classroom_name = classroom_name
+          self.teacher_id = teacher_id
+          self.teacher_name = teacher_name
+          self.week_start = week_start
+          self.week_end = week_end
+          self.timeslot_id = timeslot_id
+          self.semester_id = semester_id
+     
 class Semesters:
      def __init__(self, semester_id, semester_name, start, end, total_week):
           self.id = semester_id
