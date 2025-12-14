@@ -6,7 +6,7 @@ from core import Floors
 from core import Classrooms
 from models import get_connection
 
-def load_data(): 
+def load_classroom_data(): 
     conn = get_connection()
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()

@@ -1,6 +1,5 @@
-import datetime
-from datetime import datetime as dt, timedelta
 import sqlite3
+from datetime import datetime as dt, timedelta
 from models import get_connection
 from core import Semesters
 from core import Timenow

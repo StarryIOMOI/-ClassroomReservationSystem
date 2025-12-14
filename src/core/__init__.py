@@ -6,6 +6,7 @@ from .Class import Courses
 from .Class import Semesters
 from .Class import Timenow
 from .Tree import TreeNode
-from .Book_System import build_tree
-from .check_time import time_now
-from .check_time import locate_time
+from .Classroom_System import build_tree
+from .Classroom_System import load_classroom_data
+from .time_date_clean import time_now
+from .time_date_clean import locate_time
