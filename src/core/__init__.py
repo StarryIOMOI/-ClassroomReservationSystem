@@ -5,7 +5,7 @@ from .Class import Classrooms
 from .Class import Courses
 from .Class import Semesters
 from .Class import Timenow
-from .Tree_of_classroom import TreeNode
-from .Tree_of_classroom import build_tree
+from .Tree import TreeNode
+from .Book_System import build_tree
 from .check_time import time_now
 from .check_time import locate_time

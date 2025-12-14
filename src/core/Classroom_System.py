@@ -1,22 +1,10 @@
 import sqlite3
+from core import TreeNode
 from core import Buildings
 from core import Areas
 from core import Floors
 from core import Classrooms
 from models import get_connection
-
-class TreeNode:
-    def __init__(self, id, name, type):
-        self.id = id
-        self.name = name
-        self.type = type
-        self.children = {}
-
-    def add_child(self, node):
-        self.children[node.id] = node
-
-    def __repr__(self):
-        return f"TreeNode(id={self.id}, name={self.name}, type={self.type}, children={len(self.children)})"
 
 def load_data(): 
     conn = get_connection()
@@ -87,4 +75,4 @@ def build_tree(buildings, areas, floors, classrooms):
         cnode = TreeNode(c.id, c.name, "classroom")
         floor_node.add_child(cnode)
 
-    return root 
+    return root
