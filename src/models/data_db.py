@@ -181,7 +181,7 @@ def init_db():
             reservation_id TEXT PRIMARY KEY,
             classroom_id TEXT NOT NULL,
             user_id TEXT NOT NULL,
-            data TEXT NOT NULL,
+            date TEXT NOT NULL,
             timeslot_id TEXT NOT NULL,
             status INTEGER NOT NULL,
                        

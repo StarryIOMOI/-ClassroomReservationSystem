@@ -3,10 +3,13 @@ from .Class import Areas
 from .Class import Floors
 from .Class import Classrooms
 from .Class import Courses
+from .Class import Reservation
 from .Class import Semesters
 from .Class import Timenow
+from .Class import Timeslots
 from .Tree import TreeNode
 from .Classroom_System import build_tree
 from .Classroom_System import load_classroom_data
 from .time_date_clean import time_now
 from .time_date_clean import locate_time
+from .time_date_clean import _to_minute

@@ -41,6 +41,16 @@ class Courses:
           self.week_end = week_end
           self.timeslot_id = timeslot_id
           self.semester_id = semester_id
+
+class Reservation:
+     def __init__(self, reservation_id, classroom_id, user_id, user_name, date, timeslot_id, status):
+          self.id = reservation_id
+          self.classroom_id = classroom_id
+          self.user_id = user_id
+          self.user_name = user_name
+          self.date = date
+          self.timeslot_id = timeslot_id
+          self.status = status
      
 class Semesters:
      def __init__(self, semester_id, semester_name, start, end, total_week):
@@ -55,3 +65,10 @@ class Timenow:
           self.id = id
           self.name = name
           self.week = week
+
+class Timeslots:
+     def __init__(self, id, weekday, start_time, end_time):
+          self.id = id
+          self.weekday = weekday
+          self.start = start_time
+          self.end = end_time

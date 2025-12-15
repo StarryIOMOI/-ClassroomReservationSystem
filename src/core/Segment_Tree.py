@@ -19,7 +19,7 @@ class SegmentTree:
             
             self.tree[left] = tag
             self.tree[right] = tag
-            self.lazy[left] = tag
+            self.lazy[left] = tag      
             self.lazy[right] = tag
             
             self.lazy[node] = -1

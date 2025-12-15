@@ -3,6 +3,7 @@ from datetime import datetime as dt, timedelta
 from models import get_connection
 from core import Semesters
 from core import Timenow
+from core import Timeslots
 
 # 获取当前时间
 current_time = dt.now()
@@ -28,6 +29,22 @@ def load_semester():
 
     conn.close()
     return semesters
+
+def load_timeslots():
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM timeslot")
+    timeslot_rows = cursor.fetchall()
+
+    timeslots = [
+        Timeslots(row["timeslot_id"], row["weekday"], row["start_time"], row["end_time"])
+        for row in timeslot_rows
+    ]
+
+    conn.close()
+    return timeslots
 
 def get_school_week(start_str, current_str):
     start = dt.strptime(start_str, "%Y-%m-%d").date()
@@ -84,3 +101,13 @@ def locate_time(semesters):
                 return Timenow(s.id, s.name, week)
     
     return None
+
+def to_minute(time):
+    _time = dt.strptime(time, "%H:%M")
+    minutes = _time.hour * 60 + _time.minute
+    return minutes
+
+def total_minute(timeslots):
+    for t in timeslots:
+        st = to_minute(t.start)
+        et = to_minute(t.end)
