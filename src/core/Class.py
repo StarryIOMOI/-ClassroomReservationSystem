@@ -43,13 +43,14 @@ class Courses:
           self.semester_id = semester_id
 
 class Reservation:
-     def __init__(self, reservation_id, classroom_id, user_id, user_name, date, timeslot_id, status):
+     def __init__(self, reservation_id, classroom_id, user_id, user_name, date, start, end, status):
           self.id = reservation_id
           self.classroom_id = classroom_id
           self.user_id = user_id
           self.user_name = user_name
           self.date = date
-          self.timeslot_id = timeslot_id
+          self.start = start
+          self.end = end
           self.status = status
      
 class Semesters:

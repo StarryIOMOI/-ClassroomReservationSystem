@@ -4,6 +4,7 @@ from models import get_connection
 from core import Semesters
 from core import Timenow
 from core import Timeslots
+from core import Schedule_System
 
 # 获取当前时间
 current_time = dt.now()
@@ -107,7 +108,31 @@ def to_minute(time):
     minutes = _time.hour * 60 + _time.minute
     return minutes
 
-def total_minute(timeslots):
+def minute_of_tree(timeslots):
+    start = 1440
+    end = 0
+
     for t in timeslots:
         st = to_minute(t.start)
         et = to_minute(t.end)
+        if st < start and st > 0:
+            start = st
+        if et > end and et < 1440:
+            end = et
+            
+    total_minute = end - start
+    time = {st, end, total_minute}
+    return time
+
+def day_of_year(day):
+    d = dt.strptime(day, "%Y-%m-%d")
+    day_in_month = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+
+    if (d.year % 4 == 0 and d.year % 100 != 0) or (d.year % 400 == 0):
+        day_in_month[2] = 29
+
+    for i in range(d.month): 
+        days += day_in_month[i]
+
+    days += d.day
+    return days

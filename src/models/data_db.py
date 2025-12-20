@@ -181,8 +181,10 @@ def init_db():
             reservation_id TEXT PRIMARY KEY,
             classroom_id TEXT NOT NULL,
             user_id TEXT NOT NULL,
+            user_name TEXT NOT NULL,
             date TEXT NOT NULL,
-            timeslot_id TEXT NOT NULL,
+            start TEXT NOT NULL,
+            end TEXT NOT NULL,
             status INTEGER NOT NULL,
                        
             CONSTRAINT uniq_schedule_id UNIQUE (reservation_id)
