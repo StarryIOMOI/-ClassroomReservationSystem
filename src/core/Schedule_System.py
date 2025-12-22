@@ -68,11 +68,12 @@ def clean_timeslots(timeslots):
         t.end = to_minute(t.end)
     return timeslots
 
-def reserve(classroom_id, user_id, user_name, date, start, end, status):
+def reserve(semester_id, classroom_id, user_id, user_name, date, start, end, status):
     conn = get_connection()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     
-    have_time = Schedule_System.memory_uplord(date, start)
+    have_time = Schedule_System.memory_reserve(date, start)
     if have_time:
         try:
             sql = '''
@@ -104,7 +105,63 @@ def reserve(classroom_id, user_id, user_name, date, start, end, status):
             return False
 
         finally:
+            cursor.execute("""
+            SELECT * FROM  reservation
+            WHERE classroom_id = ? AND semester_id = ?
+            """, (classroom_id, semester_id))
+
+            reservation_rows = cursor.fetchall()
+
+            reservations = [
+            Reservation(row["course_id"], row["course_name"], row["class_id"], row["class_name"],
+                        row["classroom_id"],row["classroom_name"], row["teacher_id"], row["teacher_name"],
+                        row["week_start"], row["week_end"], row["timeslot_id"], row["semester_id"])
+            for row in reservation_rows
+            ]
             conn.close()
+            return reservations
+
+def cancel(semester_id, classroom_id, user_id, user_name, date, start, end, status = -1):
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+        UPDATE reservation
+        SET status = ?
+        WHERE semester_id = ? AND classroom_id = ? AND user_id = ?
+            AND user_name = ? AND date = ? AND start = ? AND end = ?
+        """, (status, semester_id, classroom_id, user_id, user_name, date, start, end))
+
+        conn.commit()
+        return True
+    
+    except sqlite3.IntegrityError as e:
+        print(f"添加失败：数据冲突。详细信息：{e}")
+        return False
+        
+    except Exception as e:
+        print(f"添加失败：发生未知错误 {e}")
+        return False
+
+    finally:
+        cursor.execute("""
+        SELECT * FROM  reservation
+        WHERE classroom_id = ? AND semester_id = ?
+        """, (classroom_id, semester_id))
+
+        reservation_rows = cursor.fetchall()
+
+        reservations = [
+        Reservation(row["course_id"], row["course_name"], row["class_id"], row["class_name"],
+                    row["classroom_id"],row["classroom_name"], row["teacher_id"], row["teacher_name"],
+                    row["week_start"], row["week_end"], row["timeslot_id"], row["semester_id"])
+        for row in reservation_rows
+        ]
+        conn.close()
+        Schedule_System.memory_cancel(date, end, start)
+        return reservations
 
 class Schedule_System:
     def __init__(self, start_time, end_time, total_time, time_step = 5):
@@ -133,7 +190,7 @@ class Schedule_System:
         else:
             return idx
         
-    def memory_uplord(self, date, start, end):
+    def memory_reserve(self, date, start, end):
         d = day_of_year(date)
         if d not in self.date:
             print(f"❌ 时间{date}超出预约范围！")
@@ -159,3 +216,13 @@ class Schedule_System:
         else:
             print(f"⚠️ 预约失败: {date} | {start} - {end} (时间冲突)")
             return False
+        
+    def memory_cancel(self, date, start, end):
+        d = day_of_year(date)
+
+        l = self.find_idx(start, is_end = 0)
+        r = self.find_idx(end, is_end = 1)
+
+        st = self.date[d]
+        st.cancel(l,r)
+        print(f"✅ 已取消预约: {date} | {start} - {end}")

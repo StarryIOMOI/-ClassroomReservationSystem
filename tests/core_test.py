@@ -1,10 +1,10 @@
-from core import Buildings
-from core import Areas
-from core import Floors
-from core import Classrooms
-from core import Semesters
-from core import build_tree
-from core import locate_time
+from src import Buildings
+from src import Areas
+from src import Floors
+from src import Classrooms
+from src import Semesters
+from src import build_tree
+from src import locate_time
 
 def print_tree(node, indent=""):
     print(f"{indent}└── {node.name} (id={node.id}, type={node.type})")
