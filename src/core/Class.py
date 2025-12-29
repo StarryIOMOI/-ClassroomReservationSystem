@@ -73,3 +73,19 @@ class Timeslots:
           self.weekday = weekday
           self.start = start_time
           self.end = end_time
+
+class Student:
+     def __init__(self, status, student_id, password_hash, name, class_id):
+          self.status = status
+          self.id = student_id
+          self.password = password_hash
+          self.name = name
+          self.class_id = class_id
+
+class Teacher:
+     def __init__(self, status, teacher_id, password_hash, name, class_id):
+          self.status = status
+          self.id = teacher_id
+          self.password = password_hash
+          self.name = name
+          self.class_id = class_id                                                                                                                

@@ -59,7 +59,7 @@ def init_db():
             class_id TEXT NOT NULL,
             phone_number TEXT,
             email TEXT,
-            ecovery_code TEXT,
+            recovery_code TEXT,
                        
             CONSTRAINT uniq_student_id UNIQUE (student_id),
             CONSTRAINT uniq_phone UNIQUE (phone_number),

@@ -1,6 +1,7 @@
 import sqlite3
 import sys
 import os
+# import hashlib
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(current_dir)
@@ -9,7 +10,7 @@ from models import get_connection
 #========================================
 #添加模块
 #========================================
-def create_teacher_user(teacher_id, name, phone_number = None, email = None, class_name = None, club = None,password_hash = 12345, status = 0):     #服务对象：管理员（添加教师）
+def create_teacher_user(teacher_id, name, phone_number = None, email = None, class_name = None, club = None, password_hash = 12345, status = 0):     #服务对象：管理员（添加教师）
     """向数据库添加教师用户"""
     conn = get_connection()
     cursor = conn.cursor()

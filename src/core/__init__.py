@@ -7,6 +7,8 @@ from .Class import Reservation
 from .Class import Semesters
 from .Class import Timenow
 from .Class import Timeslots
+from .Class import Student
+from .Class import Teacher
 from .Tree import TreeNode
 from .Classroom_System import build_tree
 from .Classroom_System import load_classroom_data
