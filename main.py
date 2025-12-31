@@ -1,5 +1,5 @@
-from src import student_log_in
-from src import teacher_log_in
+from src.service import student_log_in
+from src.service import teacher_log_in
 
 def log_in():
     """登录"""
@@ -31,4 +31,4 @@ def log_in():
             print("输入无效。")
 
 if __name__ == '__main__':
-    log_in
+    log_in()

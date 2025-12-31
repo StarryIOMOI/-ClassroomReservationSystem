@@ -1,10 +1,10 @@
 import sqlite3
-from core import TreeNode
-from core import Buildings
-from core import Areas
-from core import Floors
-from core import Classrooms
-from models import get_connection
+from .Tree import TreeNode
+from .Class import Buildings
+from .Class import Areas
+from .Class import Floors
+from .Class import Classrooms
+from src.models import get_connection
 
 def load_classroom_data(): 
     conn = get_connection()
@@ -35,7 +35,7 @@ def load_classroom_data():
         for row in floor_rows
     ]
 
-    cursor.execute("SELECT * FROM classrooms")
+    cursor.execute("SELECT * FROM .classrooms")
     classroom_rows = cursor.fetchall()
 
     classrooms = [

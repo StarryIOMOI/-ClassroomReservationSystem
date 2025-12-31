@@ -4,7 +4,6 @@ from models import get_connection
 from core import Semesters
 from core import Timenow
 from core import Timeslots
-from core import Schedule_System
 
 # 获取当前时间
 current_time = dt.now()
