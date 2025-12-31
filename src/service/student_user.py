@@ -28,13 +28,14 @@ def student_log_in(id, password_input):
         if password == password_input:
             print("密码正确，登录成功！\n")
             print(f"欢迎回家！博士 {row[3]}\n")
-            return Student(row[0], row[1], row[2], row[3], row[4])
+            student = Student(row[0], row[1], row[2], row[3], row[4])
+            student_menu(student)
         
     else:
         print("登录失败：学号不存在")
         return None
     
-def show_student_menu(student):
+def student_menu(student):
     """登录成功后的学生菜单"""
     while True:
         print(f"\n======== 欢迎 {student.name} ========")
