@@ -8,7 +8,7 @@ def teacher_log_in(id, password_input):
 
     cursor.execute("""
         SELECT * FROM teacher_users 
-        WHERE student_id = ?
+        WHERE teacher_id = ?
     """, (id,))
 
     row = cursor.fetchone()
@@ -27,5 +27,5 @@ def teacher_log_in(id, password_input):
             return Teacher(row[0], row[1], row[2], row[3], row[4])
         
     else:
-        print("登录失败：学号不存在")
+        print("登录失败：账号不存在")
         return None
