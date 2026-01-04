@@ -17,6 +17,7 @@ from .time_date_clean import locate_time
 from .time_date_clean import to_minute
 from .time_date_clean import day_of_year
 from .Segment_Tree import SegmentTree
+from .Schedule_System import load_course_data
 from .Schedule_System import Schedule_System
 from .Schedule_System import reserve
 from .User_System import load_courses_data

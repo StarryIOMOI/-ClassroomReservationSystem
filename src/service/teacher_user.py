@@ -1,9 +1,7 @@
 import sqlite3
-from core import Teacher
-from core import load_courses_data
+from core import Teacher, Schedule_System, load_courses_data
 from models import get_connection
-from utils import clear_screen
-from utils import pause
+from utils import clear_screen, pause
 from .manager import manager_menu
 
 def teacher_log_in(id, password_input):
@@ -86,7 +84,7 @@ def show_courses(teacher):
             pause()
 
 def reserve_classroom():
-    
+    load_course_data()
         
 def teacher_menu(teacher):
     """登录成功后的学生菜单"""

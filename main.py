@@ -1,7 +1,6 @@
-from src.service import student_log_in
-from src.service import teacher_log_in
-from src.utils import clear_screen
-from src.utils import pause
+from src.service import student_log_in, teacher_log_in
+from src.utils import clear_screen, pause
+
 
 def log_in():
     """登录"""
