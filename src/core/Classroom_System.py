@@ -1,10 +1,10 @@
 import sqlite3
-from core import TreeNode
-from core import Buildings
-from core import Areas
-from core import Floors
-from core import Classrooms
-from models import get_connection
+from .Tree import TreeNode
+from .Class import Buildings
+from .Class import Areas
+from .Class import Floors
+from .Class import Classrooms
+from src.models import get_connection
 
 def load_classroom_data(): 
     conn = get_connection()
@@ -35,7 +35,7 @@ def load_classroom_data():
         for row in floor_rows
     ]
 
-    cursor.execute("SELECT * FROM classrooms")
+    cursor.execute("SELECT * FROM .classrooms")
     classroom_rows = cursor.fetchall()
 
     classrooms = [
@@ -76,3 +76,37 @@ def build_tree(buildings, areas, floors, classrooms):
         floor_node.add_child(cnode)
 
     return root
+
+
+def print_all_buildings_summary(root_node):
+    all_buildings = root_node.children.values()
+    
+    print(f"📋 教学楼列表 (共 {len(all_buildings)} 栋)")
+    print("-" * 50)
+    print(f"{'ID':<5} | {'名称':<20} | {'下辖区域数':<10}")
+    print("-" * 50)
+
+    for node in all_buildings:
+        print(f"{node.id:<5} | {node.name:<20} | {len(node.children):<10}")
+
+    print("-" * 50)
+
+def print_tree_recursive(node, prefix="", is_last=True):
+    if prefix == "":
+        connector = ""
+    else:
+        connector = "└── " if is_last else "├── "
+    
+    print(f"{prefix}{connector}[{node.type}] {node.name} (ID: {node.id})")
+
+    if prefix == "":
+        child_prefix = "" 
+    else:
+        child_prefix = prefix + ("    " if is_last else "│   ")
+
+    children = list(node.children.values())
+    count = len(children)
+    
+    for i, child in enumerate(children):
+        is_last_child = (i == count - 1)
+        print_tree_recursive(child, child_prefix, is_last_child)
