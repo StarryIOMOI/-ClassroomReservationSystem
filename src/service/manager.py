@@ -7,9 +7,9 @@ def manager_menu():
     """登录成功后的学生菜单"""
     while True:
         print(f"\n======== 管理员 0 ========")
-        print("1. 查看我的信息")
-        print("2. 修改密码")
-        print("3. 预约教室")
+        print("1. 教室管理")
+        print("2. 用户管理")
+        print("3. 课程管理")
         print("0. 退出登录")
         
         choice = input("请选择功能: ")
@@ -19,6 +19,10 @@ def manager_menu():
             pause()
 
         elif choice == "2":
+            print("\n功能正在开发中...")
+            pause()
+
+        elif choice == "3":
             print("\n功能正在开发中...")
             pause()
 

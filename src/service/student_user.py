@@ -34,35 +34,6 @@ def student_log_in(id, password_input):
     else:
         print("登录失败：学号不存在")
         return None
-    
-def student_menu(student):
-    """登录成功后的学生菜单"""
-    while True:
-        print(f"\n======== 欢迎 {student.name} ========")
-        print(f"当前用户: {student.id} | 班级: {student.class_id}")
-        print("1. 查看我的信息\n")
-        print("2. 修改密码\n")
-        print("3. 预约教室\n")
-        print("0. 退出登录\n")
-        
-        choice = input("请选择功能: ")
-        
-        if choice == "1":
-            show_student()
-            pause()
-
-        elif choice == "2":
-            print("\n密码修改功能开发中...")
-            pause()
-
-        elif choice == "0":
-            print("\n已退出。")
-            pause()
-            break
-
-        else:
-            print("\n输入无效。")
-            pause()
 
 def show_student(student):
     """展示学生信息"""
@@ -106,6 +77,35 @@ def show_courses(student):
             print("\n返回上一步。")
             pause()
             return
+
+        else:
+            print("\n输入无效。")
+            pause()
+
+def student_menu(student):
+    """登录成功后的学生菜单"""
+    while True:
+        print(f"\n======== 欢迎 {student.name} ========")
+        print(f"当前用户: {student.id} | 班级: {student.class_id}")
+        print("1. 查看我的信息\n")
+        print("2. 修改密码\n")
+        print("3. 预约教室\n")
+        print("0. 退出登录\n")
+        
+        choice = input("请选择功能: ")
+        
+        if choice == "1":
+            show_student()
+            pause()
+
+        elif choice == "2":
+            print("\n密码修改功能开发中...")
+            pause()
+
+        elif choice == "0":
+            print("\n已退出。")
+            pause()
+            break
 
         else:
             print("\n输入无效。")

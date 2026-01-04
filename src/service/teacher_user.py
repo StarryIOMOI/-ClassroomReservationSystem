@@ -1,5 +1,6 @@
 import sqlite3
 from core import Teacher
+from core import load_courses_data
 from models import get_connection
 from utils import clear_screen
 from utils import pause
@@ -37,12 +38,59 @@ def teacher_log_in(id, password_input):
             print("登录失败：账号不存在")
             return None
         
+def show_teacher(teacher):
+    """展示学生信息"""
+    while True:
+        print(f"\n======== 欢迎 {teacher.name} ========")
+        print(f"当前用户: {teacher.id} | 班级: {teacher.class_id}")
+        print("1. 显示课程信息\n")
+        print("2. 显示社团信息\n")
+        print("0. 返回\n")
+
+        choice = input("请选择功能: ")
+        
+        if choice == "1":
+            show_courses()
+            pause()
+
+        elif choice == "2":
+            print("\n功能正在开发中...")
+            pause()
+
+        elif choice == "0":
+            print("\n返回上一步。")
+            pause()
+            return
+
+        else:
+            print("\n输入无效。")
+            pause()
+
+def show_courses(teacher):
+    """展示所选课程"""
+    while True:
+        print(f"\n======== 欢迎 {teacher.name} ========")
+        print(f"当前用户: {teacher.id} | 班级: {teacher.class_id}\n")
+
+        load_courses_data(0, teacher.id)
+
+        choice = input("输入'0'返回: ")
+
+        if choice == "0":
+            print("\n返回上一步。")
+            pause()
+            return
+
+        else:
+            print("\n输入无效。")
+            pause()
+        
 def teacher_menu(teacher):
     """登录成功后的学生菜单"""
     while True:
         print(f"\n======== 欢迎 {teacher.name} ========")
         print(f"当前用户: {teacher.id}")
-        print("1. 查看我的信息")
+        print("1. 查看信息")
         print("2. 修改密码")
         print("3. 预约教室")
         print("0. 退出登录")
