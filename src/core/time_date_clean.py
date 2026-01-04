@@ -1,9 +1,7 @@
 import sqlite3
 from datetime import datetime as dt, timedelta
 from models import get_connection
-from core import Semesters
-from core import Timenow
-from core import Timeslots
+from core import Semesters, Timenow, Timeslots
 
 # 获取当前时间
 current_time = dt.now()
@@ -13,6 +11,11 @@ day_now = current_time.day
 
 def time_now():
     return current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+def get_time():
+    semesters = load_semester()
+    timenow_obj = locate_time(semesters)
+    return timenow_obj
 
 def load_semester():
     conn = get_connection()
@@ -73,32 +76,32 @@ def locate_time(semesters):
             if year_now == st.year:
                 if st.month == month_now and st.day <= day_now:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.id, s.name, week)
+                    return Timenow(s.name, week, s)
                 elif st.month < month_now < et.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.id, s.name, week)
+                    return Timenow(s.name, week, s) 
                 elif et.month == month_now and day_now <= et.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.id, s.name, week)
+                    return Timenow(s.name, week, s) 
                     
         else:
             if year_now == st.year:
                 if month_now == st.month and day_now >= st.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.id, s.name, week)
+                    return Timenow(s.name, week, s) 
                 elif month_now > st.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.id, s.name, week)
+                    return Timenow(s.name, week, s) 
             elif year_now == et.year:
                 if month_now == et.month and day_now <= et.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.id, s.name, week)
+                    return Timenow(s.name, week, s) 
                 elif month_now < et.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.id, s.name, week)
+                    return Timenow(s.name, week, s) 
             elif st.year < year_now < et.year:
                 week = get_school_week(start_date_str, current_date_str)
-                return Timenow(s.id, s.name, week)
+                return Timenow(s.name, week, s) 
     
     return None
 
@@ -125,6 +128,7 @@ def minute_of_tree(timeslots):
 
 def day_of_year(day):
     d = dt.strptime(day, "%Y-%m-%d")
+    days = 0
     day_in_month = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 
     if (d.year % 4 == 0 and d.year % 100 != 0) or (d.year % 400 == 0):

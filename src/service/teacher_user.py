@@ -84,6 +84,9 @@ def show_courses(teacher):
         else:
             print("\n输入无效。")
             pause()
+
+def reserve_classroom():
+    
         
 def teacher_menu(teacher):
     """登录成功后的学生菜单"""
