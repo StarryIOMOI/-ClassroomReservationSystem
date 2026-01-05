@@ -1,9 +1,7 @@
 import sqlite3
-from core import Teacher
-from core import load_courses_data
+from core import Teacher, Schedule_System, load_courses_data, print_all_buildings_summary, query_building_by_id
 from models import get_connection
-from utils import clear_screen
-from utils import pause
+from utils import clear_screen, pause
 from .manager import manager_menu
 
 def teacher_log_in(id, password_input):
@@ -32,7 +30,7 @@ def teacher_log_in(id, password_input):
             if password == password_input:
                 print("密码正确，登录成功！\n")
                 teacher = Teacher(row[0], row[1], row[2], row[3], row[4])
-                teacher_menu(teacher)
+                return teacher
             
         else:
             print("登录失败：账号不存在")
@@ -85,17 +83,43 @@ def show_courses(teacher):
             print("\n输入无效。")
             pause()
 
-def reserve_classroom():
-    
+def reserve_classroom(teacher, root, time):
+    while True:
+        print(f"当前用户: {teacher.id}")
+        print("1. 查看教学楼")
+        print("2. 预约教室")
+        print("0. 返回")
+
+        choice = input("请选择功能: ")
+
+        if choice == "1":
+            print("已选择功能1")
+            pause()
+            print_all_buildings_summary(root)
+            query_building_by_id(root)
+            print("返回")
+            pause()
+
+        elif choice == "2":
+            print("\n功能正在开发中...")
+            pause()
+
+        elif choice == "3":
+            pause()
+            reserve_classroom(teacher, root, time)
+
+        else:
+            print("\n输入无效。")
+            pause()
         
-def teacher_menu(teacher):
+def teacher_menu(teacher, root, time):
     """登录成功后的学生菜单"""
     while True:
         print(f"\n======== 欢迎 {teacher.name} ========")
         print(f"当前用户: {teacher.id}")
         print("1. 查看信息")
         print("2. 修改密码")
-        print("3. 预约教室")
+        print("3. 查看教室")
         print("0. 退出登录")
         
         choice = input("请选择功能: ")
@@ -107,6 +131,10 @@ def teacher_menu(teacher):
         elif choice == "2":
             print("\n功能正在开发中...")
             pause()
+
+        elif choice == "3":
+            pause()
+            reserve_classroom(teacher, root, time)
 
         elif choice == "0":
             print("\n已退出。")

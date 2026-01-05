@@ -6,7 +6,7 @@ from .Class import Floors
 from .Class import Classrooms
 from src.models import get_connection
 
-def load_classroom_data(): 
+def load_building_data(): 
     conn = get_connection()
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -19,6 +19,14 @@ def load_classroom_data():
         for row in building_rows
     ]
 
+    conn.close()
+    return buildings
+
+def load_area_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
     cursor.execute("SELECT * FROM areas")
     area_rows = cursor.fetchall()
 
@@ -27,6 +35,14 @@ def load_classroom_data():
         for row in area_rows
     ]
 
+    conn.close()
+    return areas
+
+def load_floor_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
     cursor.execute("SELECT * FROM floors")
     floor_rows = cursor.fetchall()
 
@@ -34,6 +50,14 @@ def load_classroom_data():
         Floors(row["floor_id"], row["floor_name"], row["area_id"], row["status"])
         for row in floor_rows
     ]
+
+    conn.close()
+    return floors
+
+def load_classroom_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM .classrooms")
     classroom_rows = cursor.fetchall()
@@ -44,9 +68,14 @@ def load_classroom_data():
     ]
 
     conn.close()
-    return buildings, areas, floors, classrooms
+    return classrooms
 
-def build_tree(buildings, areas, floors, classrooms):
+def build_tree():
+    buildings = load_building_data()
+    areas = load_area_data()
+    floors = load_floor_data()
+    classrooms = load_classroom_data()
+
     root = TreeNode(0, "Campus", "Campus")
 
     building_nodes = {}
@@ -110,3 +139,22 @@ def print_tree_recursive(node, prefix="", is_last=True):
     for i, child in enumerate(children):
         is_last_child = (i == count - 1)
         print_tree_recursive(child, child_prefix, is_last_child)
+
+def query_building_by_id(root_node):
+    print("\n--- 查询教学楼详情 ---")
+    user_input = input("请输入教学楼 ID: ").strip()
+
+    if not user_input.isdigit():
+        print("❌ 错误: 请输入纯数字 ID。")
+        return
+
+    target_id = int(user_input)
+
+    target_building = root_node.children.get(target_id)
+
+    if target_building:
+        print(f"\n✅ 找到教学楼，结构如下:\n")
+        print_tree_recursive(target_building)
+        print("\n" + "-"*30)
+    else:
+        print(f"❌ 未找到 ID 为 {target_id} 的教学楼。")
