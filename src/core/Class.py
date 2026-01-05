@@ -62,10 +62,10 @@ class Semesters:
           self.week = total_week
 
 class Timenow:
-     def __init__(self, id, name, week):
-          self.id = id
+     def __init__(self, name, week, semester):
           self.name = name
           self.week = week
+          self.semester = semester
 
 class Timeslots:
      def __init__(self, id, weekday, start_time, end_time):
