@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, sys
 from models import get_connection
 from utils import clear_screen
 from utils import pause
@@ -29,7 +29,7 @@ def manager_menu():
         elif choice == "0":
             print("\n退出。")
             pause()
-            break
+            sys.exit(0)
 
         else:
             print("\n输入无效。")

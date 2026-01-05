@@ -27,6 +27,14 @@ def load_course_data(classroom_id, semester_id):
         for row in course_rows
     ]
 
+    conn.close()
+    return courses
+
+def load_reservation_data(classroom_id, semester_id): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
     cursor.execute("""
         SELECT * FROM  reservation
         WHERE classroom_id = ? AND semester_id = ?
@@ -41,26 +49,8 @@ def load_course_data(classroom_id, semester_id):
         for row in reservation_rows
     ]
 
-    cursor.execute("SELECT * FROM timeslot")
-    timeslot_rows = cursor.fetchall()
-
-    timeslots = [
-        Timeslots(row["timeslot_id"], row["weekday"], row["start_time"], row["end_time"])
-        for row in timeslot_rows
-    ]
-
-    cursor.execute("""SELECT * FROM semester""")                                                                                                              
-
-    semester_rows = cursor.fetchall()
-
-    semesters = [
-            Semesters(row["semester_id"], row["semester_name"], row["date_start"],
-                      row["date_end"], row["total_weeks"])
-        for row in semester_rows
-    ]
-
     conn.close()
-    return courses, reservations, timeslots, semesters
+    return  reservations
 
 def clean_timeslots(timeslots):
     for t in timeslots:

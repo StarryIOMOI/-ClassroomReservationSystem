@@ -12,6 +12,9 @@ from .Class import Teacher
 from .Tree import TreeNode
 from .Classroom_System import build_tree
 from .Classroom_System import load_classroom_data
+from .Classroom_System import print_all_buildings_summary
+from .Classroom_System import query_building_by_id
+from .time_date_clean import get_time
 from .time_date_clean import time_now
 from .time_date_clean import locate_time
 from .time_date_clean import to_minute

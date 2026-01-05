@@ -1,6 +1,8 @@
 import sqlite3
 from core import Student
 from core import load_courses_data
+from core import print_all_buildings_summary
+from core import query_building_by_id
 from models import get_connection
 from utils import clear_screen
 from utils import pause
@@ -29,7 +31,7 @@ def student_log_in(id, password_input):
             print("密码正确，登录成功！\n")
             print(f"欢迎回家！博士 {row[3]}\n")
             student = Student(row[0], row[1], row[2], row[3], row[4])
-            student_menu(student)
+            return student
         
     else:
         print("登录失败：学号不存在")
@@ -82,7 +84,7 @@ def show_courses(student):
             print("\n输入无效。")
             pause()
 
-def student_menu(student):
+def student_menu(student, root, time):
     """登录成功后的学生菜单"""
     while True:
         print(f"\n======== 欢迎 {student.name} ========")
