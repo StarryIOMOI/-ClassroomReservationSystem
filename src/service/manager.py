@@ -4,7 +4,6 @@ from utils import clear_screen
 from utils import pause
 
 def manager_menu():
-    """登录成功后的学生菜单"""
     while True:
         print(f"\n======== 管理员 0 ========")
         print("1. 教室管理")
