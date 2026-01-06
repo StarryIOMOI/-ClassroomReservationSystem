@@ -156,7 +156,8 @@ def init_db():
             teacher_name TEXT NOY NULL,
             week_start TEXT NOT NULL,
             week_end TEXT NOT NULL,
-            timeslot_id TEXT NOT NULL,
+            start_timeslot_id TEXT NOT NULL,
+            end_timeslot_id TEXT NOT NULL,
             semester_id TEXT NOT NULL,
                        
             CONSTRAINT uniq_course_id UNIQUE (course_id)

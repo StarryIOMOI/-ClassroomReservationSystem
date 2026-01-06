@@ -1,7 +1,13 @@
 import sqlite3, sys
-from models import load_building_data, load_area_data, load_floor_data, load_classroom_data
-from models import create_student_user, create_teacher_user, create_building, create_area, create_floor, create_classroom, create_class
-from models import get_connection
+from models import (
+    load_building_data, load_area_data, load_floor_data,
+    load_classroom_data, load_class_data, load_semester_data,
+    load_timeslots_data, load_special_semester_data)
+from models import (
+    create_student_user, create_teacher_user, create_building,
+    create_area, create_floor, create_classroom, create_class,
+    create_semester, create_course)
+from core import time_interval, get_school_week
 from utils import clear_screen, pause
 
 def add_building():
@@ -181,7 +187,7 @@ def add_teacher():
 
         if choice == "1":
             print("\n--- 新增教师 ---")
-            T_id = input("请输入新增教师ID (例如 "T202503001"): ").strip()
+            T_id = input("请输入新增教师ID (例如 T202503001): ").strip()
             T_name = input("请输入教师名 (例如 yeh): ").strip()
             
             if not T_id or not T_name:
@@ -200,6 +206,12 @@ def add_teacher():
             pause()
 
 def add_student():
+    classes = load_class_data()
+
+    if classes:
+        for c in classes:
+            print(f"班级：{c.name},id:{c.id}")
+
     while True:
         print("1. 添加学生")
         print("0. 返回")
@@ -208,16 +220,99 @@ def add_student():
 
         if choice == "1":
             print("\n--- 新增学生 ---")
-            C_id = input("请输新增学生所属班级ID (例如 "T202503001"): ").strip()
-            T_id = input("请输入新增教师ID (例如 "T202503001"): ").strip()
-            T_name = input("请输入教师名 (例如 yeh): ").strip()
+            C_id = input("请输新增学生所属班级ID (例如 C240306): ").strip()
+            S_id = input("请输入新增学生ID (例如 S24030601): ").strip()
+            S_name = input("请输入学生姓名 (例如 bxc): ").strip()
             
-            if not T_id or not T_name or not C_id:
+            if not S_id or not S_name or not C_id:
                 print("错误：所有字段都不能为空！")
                 return
 
-            create_teacher_user(teacher_id = T_id, name = T_name)
+            create_student_user(student_id = S_id, name = S_name, class_id = C_id)
 
+        elif choice == "0":
+            print("\n返回")
+            pause()
+            return
+
+        else:
+            print("\n输入无效。")
+            pause()
+
+def add_semester():
+    while True:
+        print("1. 添加学期")
+        print("0. 返回")
+
+        choice = input("请选择功能: ")
+
+        if choice == "1":
+            print("\n--- 新增学期 ---")
+            s_id = input("请输新增学期ID (例如 2025-2026-1): ").strip()
+            s_name = input("请输入新增学期 (例如 2025-2026学年第一学期): ").strip()
+            s_start = input("请输入学期开始时间 (例如 2025-09-01)").strip()
+            s_end = input("请输入学期开始时间 (例如 2026-01-10)").strip()
+            
+            if not s_id or not s_name or not s_start or not s_end:
+                print("错误：所有字段都不能为空！")
+                return
+            
+            days = time_interval(s_start, s_end)
+            if days > 0:
+                s_week = get_school_week(s_start, s_end)
+
+            create_semester(semester_id = s_id, semester_name = s_name, date_start = s_start,
+                            date_end = s_end, total_weeks = s_week)
+
+        elif choice == "0":
+            print("\n返回")
+            pause()
+            return
+
+        else:
+            print("\n输入无效。")
+            pause()
+
+def add_course():
+    while True:
+        print("1. 添加课程")
+        print("0. 返回")
+
+        choice = input("请选择功能: ")
+
+        if choice == "1":
+            print("\n--- 新增课程 ---")
+            CRS_id = input("请输新增课程ID (例如 CRS2403060101): ").strip()
+            CRS_name = input("请输入新增学期 (例如 计算机导论): ").strip()
+            C_id = input("请输入课程开设班级ID (例如 C240306)").strip()
+            c_id = input("请输入课程开设教室ID (例如 c00103101)").strip()
+            T_id = input("请输入课程教师ID (例如 T202503001)").strip()
+            s_id = input("请输入课程开设学期ID (例如 T202503001)").strip()
+            TS_start_id = input("请输入课程上课时间点ID (例如 TS_MON_1)").strip()
+            TS_end_id = input("请输入课程下课时间点ID (例如 TS_MON_2)").strip()
+            week_start = input("请输入课程开设周 (例如 1)").strip()
+            week_end = input("请输入课程结束周 (例如 16)").strip()
+            
+            if any([not CRS_id, not CRS_name, not C_id, not c_id, not T_id, not s_id, 
+            not TS_start_id, not TS_end_id, not week_start, not week_end]):
+                print("错误：所有字段都不能为空！")
+                return
+            
+            semester = load_special_semester_data()
+            
+            s = str(week_start)
+            e = str(week_end)
+            l = str(semester.week)
+
+            if 0 >= s or s > e or e > l:
+                print("错误：开设时间存在问题")
+                return
+
+            create_course(course_id = CRS_id, course_name = CRS_name, class_id = C_id,
+                        classroom_id = c_id, teacher_id = T_id, semester_id = s_id,
+                        start_timeslot_id = TS_start_id, end_timeslot_id = TS_end_id,
+                        week_start = week_start, week_end = week_end)
+            
         elif choice == "0":
             print("\n返回")
             pause()

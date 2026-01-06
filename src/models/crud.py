@@ -1,10 +1,10 @@
 import sqlite3
 import sys
 import os
-from core.Class import Buildings
-from core.Class import Areas
-from core.Class import Floors
-from core.Class import Classrooms
+from core.Class import (
+    Buildings, Areas, Floors,
+    Semesters, Classrooms, Timeslots
+    )
 # import hashlib
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -217,6 +217,99 @@ def create_class(class_id, class_name):
     finally:
         conn.close()
 
+def create_semester(semester_id, semester_name, date_start, date_end, total_weeks):
+    """
+    向数据库添加学期
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        sql = '''
+        INSERT INTO semester 
+        (semester_id, semester_name, date_start, date_end, total_weeks) 
+        VALUES (?, ?, ?, ?, ?)
+        '''
+        
+        cursor.execute(sql, (semester_id, semester_name, date_start, date_end, str(total_weeks)))
+        
+        conn.commit()
+        print(f"✅ 学期 '{semester_name}' 添加成功！")
+        return True
+
+    except sqlite3.IntegrityError:
+        print(f"❌ 添加失败：学期ID '{semester_id}' 已存在。")
+        return False
+        
+    except Exception as e:
+        print(f"❌ 添加失败：发生错误 {e}")
+        return False
+        
+    finally:
+        conn.close()
+
+def create_course(course_id, course_name, class_id, classroom_id, teacher_id, semester_id, start_timeslot_id, end_timeslot_id, week_start, week_end):
+    """
+    添加课程 (自动查找关联的名称)
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute("SELECT class_name FROM classes WHERE class_id = ?", (class_id,))
+        res_class = cursor.fetchone()
+        if not res_class:
+            print(f"❌ 失败：班级ID '{class_id}' 不存在")
+            return False
+        class_name = res_class[0]
+
+        cursor.execute("SELECT classroom_name FROM classrooms WHERE classroom_id = ?", (classroom_id,))
+        res_room = cursor.fetchone()
+        if not res_room:
+            print(f"❌ 失败：教室ID '{classroom_id}' 不存在")
+            return False
+        classroom_name = res_room[0]
+
+        cursor.execute("SELECT name FROM teacher_users WHERE teacher_id = ?", (teacher_id,))
+        res_teacher = cursor.fetchone()
+        if not res_teacher:
+            print(f"❌ 失败：教师ID '{teacher_id}' 不存在")
+            return False
+        teacher_name = res_teacher[0]
+
+        sql = '''
+        INSERT INTO courses (
+            course_id, course_name, 
+            class_id, class_name, 
+            classroom_id, classroom_name, 
+            teacher_id, teacher_name, 
+            week_start, week_end, start_timeslot_id,
+            end_timeslot_id, semester_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        '''
+        
+        cursor.execute(sql, (
+            course_id, course_name,
+            class_id, class_name,
+            classroom_id, classroom_name,
+            teacher_id, teacher_name,
+            str(week_start), str(week_end), 
+            start_timeslot_id, end_timeslot_id,
+            semester_id
+        ))
+        
+        conn.commit()
+        print(f"✅ 课程 '{course_name}' ({course_id}) 添加成功！")
+        return True
+
+    except sqlite3.IntegrityError as e:
+        print(f"❌ 添加失败：课程ID已存在 或 违反唯一约束。详情: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ 添加失败：{e}")
+        return False
+    finally:
+        conn.close()
+
 #========================================
 # 加载数据
 #========================================
@@ -273,7 +366,7 @@ def load_classroom_data():
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM .classrooms")
+    cursor.execute("SELECT * FROM classrooms")
     classroom_rows = cursor.fetchall()
 
     classrooms = [
@@ -284,3 +377,70 @@ def load_classroom_data():
     conn.close()
     return classrooms
 
+def load_class_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM classes")
+    class_rows = cursor.fetchall()
+
+    classes = [
+        Classrooms(row["class_id"], row["class_name"])
+        for row in class_rows
+    ]
+
+    conn.close()
+    return classes
+
+def load_semester_data():
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM semester")
+    semester_rows = cursor.fetchall()
+
+    semesters = [
+        Semesters(row["semester_id"], row["semester_name"], row["date_start"], row["date_end"], row["total_week"])
+        for row in semester_rows
+    ]
+
+    conn.close()
+    return semesters
+
+def load_timeslots_data():
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM timeslot")
+    timeslot_rows = cursor.fetchall()
+
+    timeslots = [
+        Timeslots(row["timeslot_id"], row["weekday"], row["start_time"], row["end_time"])
+        for row in timeslot_rows
+    ]
+
+    conn.close()
+    return timeslots
+
+def load_special_semester_data(semester_id):
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * FROM  reservation
+        WHERE semester_id = ?
+    """, (semester_id,))
+
+    semester_rows = cursor.fetchall()
+
+    semesters = [
+        Semesters(row["semester_id"], row["semester_name"], row["date_start"], row["date_end"], row["total_week"])
+        for row in semester_rows
+    ]
+
+    conn.close()
+    return semesters
