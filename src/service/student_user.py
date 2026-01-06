@@ -3,11 +3,24 @@ from core import Student
 from core import load_courses_data
 from core import print_all_buildings_summary
 from core import query_building_by_id
-from models import get_connection
-from utils import clear_screen
-from utils import pause
+from core import build_tree, get_time
+from models import get_connection, activate_student_status
+from utils import clear_screen, pause
 
-def student_log_in(id, password_input):
+def student_active():
+    id = input("请输入账号: ")
+    password_input = input("请输入密码: ")
+    pause()
+    clear_screen()
+    activate_student_status(id, password_input)
+    return
+
+def student_log_in():
+    id = input("请输入账号: ")
+    password_input = input("请输入密码: ")
+    pause()
+    clear_screen()
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -31,7 +44,9 @@ def student_log_in(id, password_input):
             print("密码正确，登录成功！\n")
             print(f"欢迎回家！博士 {row[3]}\n")
             student = Student(row[0], row[1], row[2], row[3], row[4])
-            return student
+            root = build_tree()
+            time = get_time()
+            student_menu(student, root, time)
         
     else:
         print("登录失败：学号不存在")

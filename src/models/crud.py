@@ -471,6 +471,86 @@ def load_special_semester_data(semester_id):
     return semesters
 
 #========================================
+# 修改数据
+#========================================
+def activate_student_status(student_id, password):
+    """
+    激活学生账户：验证ID和密码，且仅当当前状态为0时，将其修改为1
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        sql_check = "SELECT password_hash, status, name FROM student_users WHERE student_id = ?"
+        cursor.execute(sql_check, (student_id,))
+        row = cursor.fetchone()
+
+        if not row:
+            print(f"❌ 激活失败：找不到学生 ID '{student_id}'")
+            return False
+
+        stored_password, current_status, name = row
+
+        if str(stored_password) != str(password):
+            print(f"❌ 激活失败：密码错误")
+            return False
+
+        if current_status != 0:
+            print(f"⚠️ 激活失败：学生 '{name}' 当前状态为 {current_status} (非0)，无需激活")
+            return False
+
+        sql_update = "UPDATE student_users SET status = 1 WHERE student_id = ?"
+        cursor.execute(sql_update, (student_id,))
+        conn.commit()
+        
+        print(f"✅ 成功：学生 '{name}' ({student_id}) 状态已激活 (0 -> 1)")
+        return True
+
+    except Exception as e:
+        print(f"❌ 系统错误：{e}")
+        return False
+    finally:
+        conn.close()
+
+
+def activate_teacher_status(teacher_id, password):
+    """
+    激活教师账户：验证ID和密码，且仅当当前状态为0时，将其修改为1
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        sql_check = "SELECT password_hash, status, name FROM teacher_users WHERE teacher_id = ?"
+        cursor.execute(sql_check, (teacher_id,))
+        row = cursor.fetchone()
+
+        if not row:
+            print(f"❌ 激活失败：找不到教师 ID '{teacher_id}'")
+            return False
+
+        stored_password, current_status, name = row
+
+        if str(stored_password) != str(password):
+            print(f"❌ 激活失败：密码错误")
+            return False
+
+        if current_status != 0:
+            print(f"⚠️ 激活失败：教师 '{name}' 当前状态为 {current_status} (非0)，无需激活")
+            return False
+
+        sql_update = "UPDATE teacher_users SET status = 1 WHERE teacher_id = ?"
+        cursor.execute(sql_update, (teacher_id,))
+        conn.commit()
+        
+        print(f"✅ 成功：教师 '{name}' ({teacher_id}) 状态已激活 (0 -> 1)")
+        return True
+
+    except Exception as e:
+        print(f"❌ 系统错误：{e}")
+        return False
+    finally:
+        conn.close()
+
+#========================================
 # 临时数据
 #========================================
 

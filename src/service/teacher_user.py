@@ -1,10 +1,24 @@
 import sqlite3
 from core import Teacher, Schedule_System, load_courses_data, print_all_buildings_summary, query_building_by_id
-from models import get_connection
+from core import build_tree, get_time
+from models import get_connection, activate_teacher_status
 from utils import clear_screen, pause
 from .manager import manager_menu
 
-def teacher_log_in(id, password_input):
+def teacher_active():
+    id = input("请输入账号: ")
+    password_input = input("请输入密码: ")
+    pause()
+    clear_screen()
+    activate_teacher_status(id, password_input)
+    return
+
+def teacher_log_in():
+    id = input("请输入账号: ")
+    password_input = input("请输入密码: ")
+    pause()
+    clear_screen()
+    
     if id == '0' and password_input == '0':
         manager_menu()
     else:
@@ -30,7 +44,9 @@ def teacher_log_in(id, password_input):
             if password == password_input:
                 print("密码正确，登录成功！\n")
                 teacher = Teacher(row[0], row[1], row[2], row[3])
-                return teacher
+                root = build_tree()
+                time = get_time()
+                teacher_menu(teacher, root, time)
             
         else:
             print("登录失败：账号不存在")
