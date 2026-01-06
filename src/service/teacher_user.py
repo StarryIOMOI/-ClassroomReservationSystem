@@ -29,7 +29,7 @@ def teacher_log_in(id, password_input):
             
             if password == password_input:
                 print("密码正确，登录成功！\n")
-                teacher = Teacher(row[0], row[1], row[2], row[3], row[4])
+                teacher = Teacher(row[0], row[1], row[2], row[3])
                 return teacher
             
         else:

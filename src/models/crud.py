@@ -310,6 +310,31 @@ def create_course(course_id, course_name, class_id, classroom_id, teacher_id, se
     finally:
         conn.close()
 
+def create_timeslot(timeslot_id, weekday, start_time, end_time):
+    """
+    添加课程时间段
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        sql = '''
+        INSERT INTO timeslot (timeslot_id, weekday, start_time, end_time) 
+        VALUES (?, ?, ?, ?)
+        '''
+        cursor.execute(sql, (timeslot_id, weekday, start_time, end_time))
+        conn.commit()
+        print(f"✅ 时间槽 '{timeslot_id}' (周{weekday} {start_time}-{end_time}) 添加成功")
+        return True
+    
+    except sqlite3.IntegrityError:
+        print(f"❌ 添加失败：时间槽ID '{timeslot_id}' 已存在")
+        return False
+    except Exception as e:
+        print(f"❌ 添加失败：{e}")
+        return False
+    finally:
+        conn.close()
+
 #========================================
 # 加载数据
 #========================================

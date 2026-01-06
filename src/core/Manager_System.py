@@ -292,8 +292,8 @@ def add_course():
             c_id = input("请输入课程开设教室ID (例如 c00103101)").strip()
             T_id = input("请输入课程教师ID (例如 T202503001)").strip()
             s_id = input("请输入课程开设学期ID (例如 T202503001)").strip()
-            TS_start_id = input("请输入课程上课时间点ID (例如 TS_MON_1)").strip()
-            TS_end_id = input("请输入课程下课时间点ID (例如 TS_MON_2)").strip()
+            TS_start_id = input("请输入课程上课时间点ID (例如 TS_1_01)").strip()
+            TS_end_id = input("请输入课程下课时间点ID (例如 TS_1_02)").strip()
             week_start = input("请输入课程开设周 (例如 1)").strip()
             week_end = input("请输入课程结束周 (例如 16)").strip()
             

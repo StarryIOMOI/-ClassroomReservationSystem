@@ -83,7 +83,7 @@ class Student:
           self.class_id = class_id
 
 class Teacher:
-     def __init__(self, status, teacher_id, password_hash, name, class_id, club_id):
+     def __init__(self, status, teacher_id, password_hash, name, class_id = None, club_id = None):
           self.status = status
           self.id = teacher_id
           self.password = password_hash

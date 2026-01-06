@@ -16,7 +16,8 @@ from crud import (
     create_area, 
     create_floor, 
     create_classroom,
-    create_class
+    create_class,
+    create_timeslot
 )
 
 # ---------------------------------------------------------
@@ -101,6 +102,43 @@ def run_initialization():
                 
                 # 【修改处】在这里显式添加 type="普通教室"
                 create_classroom(c_id, c_name, floor_id=f_id, status=1, capacity=30, type="普通教室")
+
+    print("=== 开始初始化 13节课 标准作息时间 ===")
+
+    # 你提供的具体时间表 (序号, 开始, 结束)
+    # 注意：已将中文冒号替换为英文冒号，并补全了0
+    schedule_data = [
+        (1,  "08:00", "08:45"),
+        (2,  "08:50", "09:35"),
+        (3,  "09:55", "10:40"),
+        (4,  "10:45", "11:30"),
+        (5,  "11:35", "12:15"),
+        (6,  "13:30", "14:15"),
+        (7,  "14:20", "15:05"),
+        (8,  "15:25", "16:10"),
+        (9,  "16:15", "17:00"),
+        (10, "17:05", "17:45"),
+        (11, "18:30", "19:15"),
+        (12, "19:20", "20:05"),
+        (13, "20:10", "20:50"),
+    ]
+
+    # 设置生成的星期范围：1=周一, 5=周五, 7=周日
+    # 这里默认生成 周一 到 周五
+    days_range = range(1, 6) 
+
+    success_count = 0
+    
+    for day in days_range:
+        print(f"--- 正在生成 周{day} 的数据 ---")
+        for seq, start, end in schedule_data:
+            # ID 生成规则: TS + 星期几 + 节次 (补零)
+            # 例如: 周一第1节 -> TS_1_01
+            # 例如: 周五第13节 -> TS_5_13
+            t_id = f"TS_{day}_{seq:02d}"
+            
+            if create_timeslot(t_id, day, start, end):
+                success_count += 1
 
     print("=== 初始化完成 ===")
 

@@ -1,7 +1,7 @@
 import sys
 from src.service import student_log_in, teacher_log_in, student_menu, teacher_menu
 from src.core import build_tree, get_time
-from src.utils import clscreen, pause
+from src.utils import clear_screen, pause
     
 def log_in():
     """登录"""
@@ -14,20 +14,24 @@ def log_in():
         choice = input("请选择功能: ")
         
         if choice == "1":
+            clear_screen()
             print(f"\n======== 教师登录 ========")
             id = input("请输入账号: ")
             password = input("请输入密码: ")
             pause()
+            clear_screen()
             teacher = teacher_log_in(id, password)
             root = build_tree()
             time = get_time()
             teacher_menu(teacher, root, time)
 
         elif choice == "2":
+            clear_screen()
             print(f"\n======== 学生登录 ========")
             id = input("请输入账号: ")
             password = input("请输入密码: ")
             pause()
+            clear_screen()
             student = student_log_in(id, password)
             root = build_tree()
             time = get_time()
@@ -40,6 +44,7 @@ def log_in():
         else:
             print("输入无效。")
             pause()
+            clear_screen()
 
 if __name__ == '__main__':
     log_in()

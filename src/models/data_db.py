@@ -30,7 +30,7 @@ def init_db():
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = ON;")
 
-        #教室用户表
+        #教师用户表
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS teacher_users (
             status INTEGER NOT NULL, 
