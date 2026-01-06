@@ -1,5 +1,7 @@
 import sqlite3, sys
-from core import add_building, add_area, add_floor, add_classroom
+from core import (add_building, add_area, add_floor, add_classroom,
+                  add_teacher, add_student, add_class, add_semester,
+                  add_course)
 from models import get_connection
 from utils import clear_screen, pause
 
@@ -19,8 +21,9 @@ def manager_menu():
             classrooms()
 
         elif choice == "2":
-            print("\n功能正在开发中...")
+            print("\n已选择：2. 用户管理")
             pause()
+            users()
 
         elif choice == "3":
             print("\n功能正在开发中...")
@@ -72,8 +75,9 @@ def users():
         choice = input("请选择功能: ")
 
         if choice == "1":
-            print("\n功能正在开发中...")
+            print("\n已选择：1. 添加用户")
             pause()
+            add_user()
 
         elif choice == "2":
             print("\n功能正在开发中...")
@@ -98,8 +102,14 @@ def courses():
         choice = input("请选择功能: ")
 
         if choice == "1":
-            print("\n功能正在开发中...")
+            print("\n已选择：1. 添加学期")
             pause()
+            add_semester()
+
+        if choice == "2":
+            print("\n已选择：2. 添加课程")
+            pause()
+            add_course()
 
         elif choice == "0":
             print("\n返回上一步。")
@@ -177,6 +187,45 @@ def modify_classrooms():
             print("\n已选择：4. 管理教室")
             pause()
             add_classroom()
+
+        elif choice == "0":
+            print("\n返回上一步。")
+            pause()
+            return
+
+        else:
+            print("\n输入无效。")
+            pause()
+
+def add_user():
+    while True:
+        print("\n======== 添加用户 ========")
+        print("1. 添加教师")
+        print("2. 添加学生")
+        print("3. 添加院系")
+        print("4. 添加班级")
+        print("0. 返回")
+
+        choice = input("请选择功能: ")
+
+        if choice == "1":
+            print("\n已选择：1. 添加教师")
+            pause()
+            add_teacher()
+
+        elif choice == "2":
+            print("\n已选择：2. 添加学生")
+            pause()
+            add_student
+
+        elif choice == "3":
+            print("\n已选择：3. 添加班级")
+            pause()
+            add_class
+
+        elif choice == "4":
+            print("\n功能正在开发中...")
+            pause()
 
         elif choice == "0":
             print("\n返回上一步。")

@@ -26,6 +26,11 @@ from .Schedule_System import Schedule_System
 from .Schedule_System import reserve
 from .User_System import load_courses_data
 from .Manager_System import add_building
-from .Manager_System import add_area0
+from .Manager_System import add_area
 from .Manager_System import add_floor
 from .Manager_System import add_classroom
+from .Manager_System import add_class
+from .Manager_System import add_teacher
+from .Manager_System import add_student
+from .Manager_System import add_semester
+from .Manager_System import add_course

@@ -7,6 +7,7 @@ from models import (
     create_student_user, create_teacher_user, create_building,
     create_area, create_floor, create_classroom, create_class,
     create_semester, create_course)
+from models import print_course_table       #临时
 from core import time_interval, get_school_week
 from utils import clear_screen, pause
 
@@ -275,6 +276,9 @@ def add_semester():
 
 def add_course():
     while True:
+        print("\n======== 添加课程 ========")
+        print_course_table()
+
         print("1. 添加课程")
         print("0. 返回")
 

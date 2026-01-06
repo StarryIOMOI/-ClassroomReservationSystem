@@ -18,3 +18,4 @@ from .crud import load_class_data
 from .crud import load_semester_data
 from .crud import load_timeslots_data
 from .crud import load_special_semester_data
+from .crud import print_course_table
