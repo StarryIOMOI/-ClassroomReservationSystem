@@ -15,26 +15,9 @@ from crud import (
     create_building, 
     create_area, 
     create_floor, 
-    create_classroom
+    create_classroom,
+    create_class
 )
-
-# ---------------------------------------------------------
-# 补充：添加班级的函数 (因为之前的 crud.py 可能没有这个)
-# ---------------------------------------------------------
-def create_class(class_id, class_name):
-    conn = get_connection()
-    cursor = conn.cursor()
-    try:
-        sql = "INSERT INTO classes (class_id, class_name) VALUES (?, ?)"
-        cursor.execute(sql, (class_id, class_name))
-        conn.commit()
-        print(f"班级 {class_name} ({class_id}) 添加成功！")
-    except sqlite3.IntegrityError:
-        print(f"班级 {class_name} 已存在或冲突，跳过。")
-    except Exception as e:
-        print(f"添加班级出错: {e}")
-    finally:
-        conn.close()
 
 # ---------------------------------------------------------
 # 主初始化逻辑

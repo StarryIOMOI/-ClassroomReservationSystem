@@ -5,5 +5,10 @@ from .crud import create_building
 from .crud import create_area
 from .crud import create_floor
 from .crud import create_classroom
+from .crud import create_class
 from .crud import create_teacher_user
 from .crud import create_student_user
+from .crud import load_building_data
+from .crud import load_area_data
+from .crud import load_floor_data
+from .crud import load_classroom_data

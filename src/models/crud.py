@@ -1,6 +1,10 @@
 import sqlite3
 import sys
 import os
+from core.Class import Buildings
+from core.Class import Areas
+from core.Class import Floors
+from core.Class import Classrooms
 # import hashlib
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -181,3 +185,102 @@ def create_classroom(classroom_id, classroom_name, floor_id, type, status = 1, c
         return False
     finally:
         conn.close()
+
+#========================================
+# 数据资源管理模块
+#========================================
+
+def create_class(class_id, class_name):
+    """
+    向数据库添加班级
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        sql = '''
+        INSERT INTO classes (class_id, class_name) 
+        VALUES (?, ?)
+        '''
+        cursor.execute(sql, (class_id, class_name))
+        conn.commit()
+        print(f"✅ 班级 '{class_name}' (ID: {class_id}) 添加成功！")
+        return True
+
+    except sqlite3.IntegrityError as e:
+        print(f"❌ 添加失败：班级ID '{class_id}' 或 名称 '{class_name}' 已存在。")
+        return False
+        
+    except Exception as e:
+        print(f"❌ 添加失败：发生错误 {e}")
+        return False
+        
+    finally:
+        conn.close()
+
+#========================================
+# 加载数据
+#========================================
+def load_building_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM buildings")
+    building_rows = cursor.fetchall()
+
+    buildings = [
+        Buildings(row["building_id"], row["building_name"], row["status"])
+        for row in building_rows
+    ]
+
+    conn.close()
+    return buildings
+
+def load_area_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM areas")
+    area_rows = cursor.fetchall()
+
+    areas = [
+        Areas(row["area_id"], row["area_name"], row["building_id"], row["status"])
+        for row in area_rows
+    ]
+
+    conn.close()
+    return areas
+
+def load_floor_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM floors")
+    floor_rows = cursor.fetchall()
+
+    floors = [
+        Floors(row["floor_id"], row["floor_name"], row["area_id"], row["status"])
+        for row in floor_rows
+    ]
+
+    conn.close()
+    return floors
+
+def load_classroom_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM .classrooms")
+    classroom_rows = cursor.fetchall()
+
+    classrooms = [
+        Classrooms(row["classroom_id"], row["classroom_name"], row["floor_id"], row["status"])
+        for row in classroom_rows
+    ]
+
+    conn.close()
+    return classrooms
+

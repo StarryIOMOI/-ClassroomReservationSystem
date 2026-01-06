@@ -1,74 +1,12 @@
 import sqlite3
 from .Tree import TreeNode
-from .Class import Buildings
-from .Class import Areas
-from .Class import Floors
-from .Class import Classrooms
 from src.models import get_connection
-
-def load_building_data(): 
-    conn = get_connection()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM buildings")
-    building_rows = cursor.fetchall()
-
-    buildings = [
-        Buildings(row["building_id"], row["building_name"], row["status"])
-        for row in building_rows
-    ]
-
-    conn.close()
-    return buildings
-
-def load_area_data(): 
-    conn = get_connection()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM areas")
-    area_rows = cursor.fetchall()
-
-    areas = [
-        Areas(row["area_id"], row["area_name"], row["building_id"], row["status"])
-        for row in area_rows
-    ]
-
-    conn.close()
-    return areas
-
-def load_floor_data(): 
-    conn = get_connection()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM floors")
-    floor_rows = cursor.fetchall()
-
-    floors = [
-        Floors(row["floor_id"], row["floor_name"], row["area_id"], row["status"])
-        for row in floor_rows
-    ]
-
-    conn.close()
-    return floors
-
-def load_classroom_data(): 
-    conn = get_connection()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM .classrooms")
-    classroom_rows = cursor.fetchall()
-
-    classrooms = [
-        Classrooms(row["classroom_id"], row["classroom_name"], row["floor_id"], row["status"])
-        for row in classroom_rows
-    ]
-
-    conn.close()
-    return classrooms
+from src.models import (
+    load_building_data,
+    load_area_data,
+    load_floor_data,
+    load_classroom_data
+)
 
 def build_tree():
     buildings = load_building_data()

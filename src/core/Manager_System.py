@@ -1,6 +1,6 @@
 import sqlite3, sys
-from core import load_building_data, load_area_data, load_floor_data, load_classroom_data
-from models import create_student_user, create_teacher_user, create_building, create_area, create_floor, create_classroom
+from models import load_building_data, load_area_data, load_floor_data, load_classroom_data
+from models import create_student_user, create_teacher_user, create_building, create_area, create_floor, create_classroom, create_class
 from models import get_connection
 from utils import clear_screen, pause
 
@@ -93,7 +93,7 @@ def add_floor():
             print("\n--- 新增楼层 ---")
             a_id = input("请输入所属区域ID (例如 a00103): ").strip()
             f_id = input("请输入新楼层ID (例如 f001031): ").strip()
-            f_name = input("请输入楼层 (例如 一层): ").strip()
+            f_name = input("请输入楼层 (例如 1层): ").strip()
             
             if not a_id or not f_id or not f_name:
                 print("错误：所有字段都不能为空！")
@@ -146,3 +146,83 @@ def add_classroom():
             pause()
 
 def add_class():
+    while True:
+        print("1. 添加班级")
+        print("0. 返回")
+
+        choice = input("请选择功能: ")
+
+        if choice == "1":
+            print("\n--- 新增班级 ---")
+            C_id = input("请输入新增班级ID (例如 C240303): ").strip()
+            C_name = input("请输入班级名称 (例如 24软一): ").strip()
+            
+            if not C_id or not C_name:
+                print("错误：所有字段都不能为空！")
+                return
+
+            create_class(class_id = C_id, class_name = C_name)
+
+        elif choice == "0":
+            print("\n返回")
+            pause()
+            return
+
+        else:
+            print("\n输入无效。")
+            pause()
+
+def add_teacher():
+    while True:
+        print("1. 添加教师")
+        print("0. 返回")
+
+        choice = input("请选择功能: ")
+
+        if choice == "1":
+            print("\n--- 新增教师 ---")
+            T_id = input("请输入新增教师ID (例如 "T202503001"): ").strip()
+            T_name = input("请输入教师名 (例如 yeh): ").strip()
+            
+            if not T_id or not T_name:
+                print("错误：所有字段都不能为空！")
+                return
+
+            create_teacher_user(teacher_id = T_id, name = T_name)
+
+        elif choice == "0":
+            print("\n返回")
+            pause()
+            return
+
+        else:
+            print("\n输入无效。")
+            pause()
+
+def add_student():
+    while True:
+        print("1. 添加学生")
+        print("0. 返回")
+
+        choice = input("请选择功能: ")
+
+        if choice == "1":
+            print("\n--- 新增学生 ---")
+            C_id = input("请输新增学生所属班级ID (例如 "T202503001"): ").strip()
+            T_id = input("请输入新增教师ID (例如 "T202503001"): ").strip()
+            T_name = input("请输入教师名 (例如 yeh): ").strip()
+            
+            if not T_id or not T_name or not C_id:
+                print("错误：所有字段都不能为空！")
+                return
+
+            create_teacher_user(teacher_id = T_id, name = T_name)
+
+        elif choice == "0":
+            print("\n返回")
+            pause()
+            return
+
+        else:
+            print("\n输入无效。")
+            pause()

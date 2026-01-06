@@ -11,10 +11,6 @@ from .Class import Student
 from .Class import Teacher
 from .Tree import TreeNode
 from .Classroom_System import build_tree
-from .Classroom_System import load_building_data
-from .Classroom_System import load_area_data
-from .Classroom_System import load_floor_data
-from .Classroom_System import load_classroom_data
 from .Classroom_System import print_all_buildings_summary
 from .Classroom_System import query_building_by_id
 from .time_date_clean import get_time

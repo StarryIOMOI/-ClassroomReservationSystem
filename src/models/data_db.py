@@ -195,5 +195,5 @@ def init_db():
         conn.close()
         print(f"数据库 {db_name} 定义完成。")
 
-if __name__ == "__main__":
-    init_db()
+# if __name__ == "__main__":
+#     init_db()
