@@ -1,0 +1,1118 @@
+% 数据结构课程设计报告模板
+% 编译方式：XeLaTeX
+
+\documentclass[a4paper,12pt,twoside]{ctexrep}
+
+% 版面与基本宏包
+\usepackage{geometry}   %设置页边距的宏包
+\geometry{left=2cm,right=2cm,top=2.5cm,bottom=2.5cm}  %设置 上、左、下、右 页边距
+
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+
+\usepackage{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{array}
+\usepackage{fancyhdr}
+\usepackage{caption}
+
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{listings,skins,breakable}
+
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+% =========================
+% 列表样式（1ch 视作 1\ccwd）
+% =========================
+
+\setlist[itemize]{%
+  label=\textbullet,
+  labelindent=1\ccwd,   % bullet 起始位置：1ch
+  labelwidth=1\ccwd,    % 为 bullet 预留 1ch 宽度
+  labelsep=0pt,         % 不额外加缝隙
+  leftmargin=2\ccwd,    % 正文起始位置：2ch
+  itemindent=0pt,
+  align=parleft,        % 悬挂对齐：换行与正文起始对齐
+  listparindent=0pt,
+  topsep=2pt,itemsep=1pt,parsep=0pt,partopsep=0pt
+}
+
+\setlist[enumerate]{%
+  label=\arabic*.,
+  labelindent=2\ccwd,   % 编号起始位置：2ch
+  labelwidth=1\ccwd,    % 为编号预留 1ch
+  labelsep=0pt,
+  leftmargin=3\ccwd,    % 正文起始位置：3ch
+  itemindent=0pt,
+  align=parleft,
+  listparindent=0pt,
+  topsep=2pt,itemsep=1pt,parsep=0pt,partopsep=0pt
+}
+
+
+\usepackage{letltxmacro}
+\usepackage[numbers]{natbib}
+\usepackage{lipsum}
+
+\usepackage[titles]{tocloft}
+\setlength{\cftbeforechapskip}{0pt}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftchapdotsep}}
+\renewcommand{\cftchapdotsep}{\cftdotsep}
+\renewcommand{\cftdotsep}{1.0}
+
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{ifoddpage}
+
+\newcommand{\evenblank}{%
+  \clearpage
+  \checkoddpage
+  \ifoddpage
+    \thispagestyle{empty}\null\newpage
+  \fi
+}
+
+\newcommand{\OneEm}{\symbol{12288}}
+
+\usepackage{fontspec,xltxtra,xunicode}
+
+\defaultfontfeatures{Mapping=tex-text} %如果没有它，一些 tex 特殊字符无法正常使用，比如连字符
+% 文章内中文自动换行，可以自行调节
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 0.1em
+
+% 中文字体支持
+% 字体需要根据自己电脑系统来设置
+\usepackage{xeCJK}
+
+\xeCJKsetup{
+  CJKglue   = {\hskip 0pt plus 0.18em}, % 靠 stretch 做两端对齐扩字距
+  CJKecglue = {\hskip 0pt plus 0.18em}
+}
+
+\setmainfont{Times New Roman}        
+\IfFontExistsTF{SimSun}{          % 宋体/常规字体 
+  \setCJKmainfont{SimSun}
+}{
+  \setCJKmainfont{Songti SC}
+}
+\setsansfont{Arial}
+\setCJKsansfont{SimHei}              % 黑体/无衬线体 
+\setmonofont{Courier New}
+\setCJKmonofont{STFangsong}       % 仿宋/等宽字体 
+
+% 定义用于特定位置的中文字体别名 (可选，模版中已包含)
+\setCJKfamilyfont{zhhei}{SimHei}
+\newcommand*{\hei}{\CJKfamily{zhhei}}
+\setCJKfamilyfont{zhkai}{STKaiti}
+\newcommand*{\kai}{\CJKfamily{zhkai}}
+\setCJKfamilyfont{enroman}{Times New Roman}
+\newcommand*{\mytimes}{\CJKfamily{enroman}}
+\setCJKfamilyfont{STFangsong}{STFangsong}
+
+
+% 标题字体：一级、二级标题用 黑体 + Arial
+\newcommand{\HeadingFont}{\heiti\sffamily}
+
+\ctexset{
+  chapter = {
+    format = \HeadingFont\LARGE\centering,
+    name = {第,章},
+    number = \chinese{chapter},
+    beforeskip = 0.2\baselineskip,
+    afterskip = \baselineskip
+  },
+  section = {
+    format = \HeadingFont\Large
+  },
+  % 三级及以下标题采用 宋体 + Times New Roman
+  subsection = {
+    format = \heiti\sffamily\large
+  },
+  subsubsection = {
+    format = \songti\bfseries\normalsize
+  }
+}
+
+% 正文行距
+\onehalfspacing
+
+\setlength{\parskip}{0pt}% 段前段后不加额外空白
+\setlength{\parindent}{2\ccwd} % 首行缩进 2 字（常见 Word 风格）
+
+% 代码环境设置：仿宋 + Courier，字号约 10.5pt（用 \small 近似）
+\newtcblisting{codeblock}{
+  listing only,
+  listing engine=listings,
+  breakable,
+  enhanced,
+  colback=black!3,
+  colframe=black!0,
+  boxrule=0pt,
+  arc=2pt,
+  drop shadow,
+  left=6pt,right=6pt,top=6pt,bottom=6pt,
+  listing options={
+    basicstyle=\ttfamily\small,
+    columns=fullflexible,
+    keepspaces=true,
+    breaklines=true,
+    showstringspaces=false
+  }
+}
+
+% 单行字段容器
+\newcommand{\FillLine}[1]{%
+  \uline{\hspace{\linewidth}}%
+  \llap{#1}%
+}
+
+% 多行字段容器
+\newcommand{\Field}[2][8cm]{%
+  \begin{minipage}[t]{#1}
+    \setlength{\parindent}{0pt}% 取消缩进，避免第一行缩进
+    \centering #2%
+  \end{minipage}%
+}
+
+% 居中带下划线的文本字段容器
+\newcommand{\CenteredField}[2][8cm]{%
+  \begin{minipage}[t]{#1}
+    \setlength{\parindent}{0pt}
+    \centering
+    \underline{\hbox to #1{\hfil#2\hfil}}
+  \end{minipage}%
+}
+
+% 设置页眉页脚样式
+\pagestyle{fancy}
+\fancyhf{} % 清除所有页眉页脚的默认设置
+\setlength{\headheight}{14pt}
+
+% 页码：装订线外侧（外侧=奇数页右、偶数页左）
+\fancyhead[RO,LE]{\thepage}
+
+% 页眉中央：报告标题（组合）
+\fancyhead[CE,CO]{\kai \ReportTitleA\ReportTitleB}
+
+\renewcommand{\headrulewidth}{0.4pt} % 添加页眉线
+\renewcommand{\footrulewidth}{0pt} % 页脚线保持移除
+
+% 定义一个用于摘要页的样式：只显示页眉，不显示页码（页脚为空）
+% 配合 \pagenumbering{gobble} 使用
+\fancypagestyle{fancy_no_page}{
+  \fancyhf{}
+  \fancyhead[RO]{\kai 数据结构课程设计报告} 
+  \fancyhead[LE]{\kai \ReportTitleA\ReportTitleB} 
+  \renewcommand{\headrulewidth}{0.4pt} % 保持页眉线
+  \renewcommand{\footrulewidth}{0pt}   % 保持无页脚线
+}
+
+% 章首页
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[RO,LE]{\thepage}
+  \fancyhead[CE,CO]{\kai \ReportTitleA\ReportTitleB}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% 设置浮动体位置参数
+\setcounter{topnumber}{5}
+\setcounter{bottomnumber}{5}
+\setcounter{totalnumber}{10}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+
+% 自定义图表编号格式: x-y (章节-序号)
+\renewcommand{\thefigure}{\arabic{chapter}-\arabic{figure}}
+\renewcommand{\thetable}{\arabic{chapter}-\arabic{table}}
+
+% 设置图表标题格式
+\DeclareCaptionFormat{myformat}{\songti#1#2 #3}
+\captionsetup[figure]{format=myformat,labelfont=rm,labelsep=none,position=below}
+\captionsetup[table]{format=myformat,labelfont=rm,labelsep=none,position=top}
+\captionsetup[lstlisting]{format=myformat,labelfont=bf,labelsep=none,position=top}
+
+% 设置图表标题字体和大小
+\captionsetup{font={small,singlespacing}}
+\captionsetup[figure]{name=图}
+\captionsetup[table]{name=表}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% 填写报告信息 %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\ReportTitleA}{教室预约系统}
+\newcommand{\ReportTitleB}{} % 如果标题过长可在第二行手动续行
+\newcommand{\StudentClass}{24 软件四}
+\newcommand{\StudentNameA}{步{\OneEm}星辰（24030601）}
+\newcommand{\StudentNameB}{王{\OneEm}炀成（24030625）}
+\newcommand{\StudentNameC}{} % 如果不需要这行可以留空
+\newcommand{\Supervisor}{叶鸿}
+\newcommand{\Score}{}
+\newcommand{\SubmitDate}{2026 年 1 月 9 日}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%
+% 封面（不显示页码）
+%%%%%%%%%%%%%%%%%%%%
+
+\begin{titlepage}
+  \thispagestyle{empty}
+
+  % 上部：Logo
+  \vspace*{1cm}
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{assets/cit_logo.pdf}
+  \end{center}
+
+  % 中部：课程名与报告名
+  \vfill
+
+  \begin{center}
+    {\HeadingFont\fontsize{36pt}{40pt}\selectfont 数据结构课程设计}
+  \end{center}
+
+  % 下部：键值对信息表（无网格线）
+  \vfill
+
+  \begin{center}
+  {\large
+  \renewcommand{\arraystretch}{1.6} % 行距
+
+  \begin{tabular}{@{}R{3cm}C{10cm}@{}} % 列宽
+    项目名称： &
+      \CenteredField[10cm]{\ReportTitleA} \\
+              &
+      \CenteredField[10cm]{\ReportTitleB} \\
+    班{\OneEm}{\OneEm}级： &
+      \CenteredField[10cm]{\StudentClass} \\
+    团队成员： &
+      \CenteredField[10cm]{\StudentNameA} \\
+              &
+      \CenteredField[10cm]{\StudentNameB} \\
+              &
+      \CenteredField[10cm]{\StudentNameC} \\
+    指导教师： &
+      \CenteredField[10cm]{\Supervisor} \\
+    评{\OneEm}{\OneEm}分： &
+      \CenteredField[10cm]{\Score} \\
+    提交日期： &
+      \CenteredField[10cm]{\SubmitDate} \\
+  \end{tabular}
+
+  } % 这一行结束 {\Large} 的作用范围
+\end{center}
+
+
+  \vfill
+  
+  \begin{center}
+    {\HeadingFont\fontsize{20pt}{22pt}\selectfont 计算机信息工程学院}
+  \end{center}
+  
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%
+% 前置部分（罗马页码）
+%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\pagenumbering{gobble}
+
+\evenblank
+% 学术诚信承诺页
+\chapter*{学术诚信承诺}
+%\addcontentsline{toc}{chapter}{学术诚信承诺}
+\thispagestyle{empty}
+
+{\kai \Large 本人郑重承诺：
+
+本报告及所附代码、图表和数据分析结果，均为本人（或本小组成员）在指导教师指导下独立完成，不含有任何未经注明来源的抄袭、剽窃或其他形式的学术不端行为。
+
+如有违反，本人愿意承担相应的学术与纪律责任。
+
+\vspace{2cm}
+
+\hfill \noindent 完成人（签名）：
+\CenteredField[8cm]{}
+
+\vspace{1cm}
+
+\hfill \noindent 日期：
+\CenteredField[8cm]{}}
+
+\newpage
+
+% 中文摘要
+\chapter*{摘\ 要}
+%\addcontentsline{toc}{chapter}{摘\ 要}
+\thispagestyle{empty}
+
+本项目完成了教室预约系统的设计与实现。主要包括以下几个要素：
+
+1. \textbf{研究背景与问题概述}：高校教室资源紧张，传统人工预约流程繁琐、信息更新滞后，易出现预约冲突与资源闲置问题，师生难以实时获取教室状态，管理员统筹效率低，亟需智能化系统优化管理。
+
+2. \textbf{数据结构与算法}：采用 “链表 + 栈 + 队列” 组合：链表存储教室信息与预约记录，支持高效增删查；栈记录操作以实现撤销；队列按序处理预约，自动检测冲突。
+
+3. \textbf{主要功能}：分师生与管理员角色，支持教室查询、预约申请与审核、状态实时查看、预约撤销等核心操作。
+
+4. \textbf{实现效果}：核心操作响应高效，支持多用户并发使用，模块化设计便于扩展，显著提升教室资源利用率。
+
+\vspace{1cm}
+
+\noindent\textbf{关键词：} 数据结构；教室预约；链表；栈；队列；C 语言
+
+\newpage
+
+% 英文摘要
+\chapter*{Abstract}
+%\addcontentsline{toc}{chapter}{Abstract}
+\thispagestyle{empty}
+
+The project has completed the design and implementation of a classroom reservation system. It mainly includes the following key elements:
+
+1. \textbf{Background and problem statement}: University classroom resources are in short supply. The traditional manual reservation process is cumbersome with delayed information updates, prone to reservation conflicts and resource idleness. Teachers and students cannot obtain real-time classroom status, and administrators have low coordination efficiency, so an intelligent system is urgently needed to optimize management.
+
+2. \textbf{Data structures and algorithms}: A combination of "linked list + stack + queue" is adopted: linked lists store classroom information and reservation records for efficient addition, deletion and query; stacks record operations for undo; queues process reservations in order with automatic conflict detection
+
+3. \textbf{Main functions}:With teacher/student and administrator roles, it supports core operations such as classroom query, reservation application and review, real-time status check, and reservation cancellation.
+
+4. \textbf{Implementation results}: Core operations respond efficiently, supporting concurrent use by multiple users. The modular design facilitates expansion and significantly improves classroom resource utilization.
+
+Keywords: data structures; classroom reservation; linked list; stack; queue; C language
+
+\vspace{1cm}
+
+\noindent\textbf{Keywords:} data structures; parking lot management; stack; queue; C language
+
+\newpage
+
+% 目录（小写罗马字页码）
+\pagenumbering{roman}
+\pagestyle{fancy}
+\tableofcontents
+\thispagestyle{plain}
+
+%%%%%%%%%%%%%%%%%%%%
+% 正文部分（阿拉伯数字页码）
+%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\pagestyle{fancy}
+\pagenumbering{arabic}
+\phantomsection
+\setcounter{page}{1}
+
+\cleardoublepage
+\chapter{引言}
+
+本章用于向读者介绍本次课程设计的整体情况。建议内容包括：
+
+\begin{itemize}
+  \item \textbf{项目背景：} 说明你所选择的应用场景，例如停车场管理、学生成绩管理、图书借阅系统、迷宫求解、表达式求值等。可以简要引用相关领域的背景资料，说明该问题在实际生活或工程中的意义。
+  \item \textbf{研究目标：} 用清晰的语句指出本项目希望解决的问题，例如“实现车辆进出的高效管理”“设计支持多种查询操作的学生信息系统”“构建可视化的迷宫寻路算法演示工具”等。
+  \item \textbf{核心数据结构：} 简要说明你选择使用的主要数据结构（如栈、队列、链表、树、图等），并用几句话说明选择这些数据结构的理由。
+  \item \textbf{报告结构：} 在本节最后，可以用一小段话概括后续各章的内容安排，帮助读者建立整体阅读框架。
+\end{itemize}
+
+撰写时请避免把详细技术细节提前堆积在引言中，引言的重点是让读者知道你在干什么、为什么值得做。
+
+\section{项目背景与动机}
+
+这里可以进一步展开应用场景或问题背景。例如：
+
+\begin{itemize}
+  \item 人工登记、表格统计等方式流程繁琐，师生预约需多次沟通确认，耗时耗力；
+  \item 信息更新不及时，易出现同一时间段多组人员预约同一教室的冲突，或部分教室长期闲置的资源浪费；
+  \item 缺乏实时查询渠道，师生难以快速获取教室使用状态，常面临 “跑空”“约不到” 的困境；
+  \item 管理员缺乏高效统筹工具，无法精准掌握教室利用率，调解预约矛盾的效率低下。
+\end{itemize}
+
+\section{研究目标与问题定义}
+
+针对本项目，用较为形式化的方式定义任务需求（功能需求、性能需求等），并给出要实现的主要功能模块和预期的性能指标或成功标准。插入图片的方法如图\ref{fig:maodie}。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{assets/圆头耄耋.png}
+  \caption{示例图片}
+  \label{fig:maodie}
+\end{figure}
+
+下面从“引言”开始的若干页（直到下一章之前）是本次课程设计报告的写作示范（以“引言”章节为例）。请注意，为了模版章节编号不错乱，这篇示例\textbf{没有}显示章节编号。实际写作时仍然应谨遵模版工作。
+
+\chapter*{引言}
+
+随着城市机动车保有量的快速增长和土地资源的日益紧张，停车难已成为困扰城市交通管理的突出问题之一。在商业中心、医院、学校等人流密集场所，停车位供需矛盾尤为明显。传统的人工管理方式不仅效率低下，而且容易出现计费错误、车位信息滞后等问题，难以满足现代化管理的需求。近年来，随着信息技术的发展，越来越多的停车场开始引入智能化管理系统，通过自动识别、实时监控和数据统计等手段提升管理效率与服务质量。在这样的背景下，本课程设计选取“停车场管理系统”作为应用场景，尝试运用数据结构课程中所学的核心知识，设计并实现一个具备基本功能的停车场管理原型系统。
+
+本项目的核心目标是利用合适的数据结构，实现停车场车辆进出、停车费用计算、车位查询与统计等基本功能。系统需要支持多辆车的并发管理，能够准确记录每辆车的进入时间、离开时间及停车位置，并根据停车时长自动计算停车费用。更具体地说，一方面系统要能够高效地处理车辆的进栈（入场）与出栈（离场）操作，确保数据的准确性和实时性；另一方面，系统需要提供友好的用户交互界面，使管理员能够方便地进行车辆信息查询、停车场状态监控等操作。项目希望回答的关键问题包括：在停车场容量有限的情况下，如何通过栈和队列的组合使用实现车辆的有序管理；如何设计合理的数据结构以支持快速的车辆信息检索；以及如何在保证功能完整性的前提下，实现代码的模块化和可维护性。
+
+在数据结构选择上，本项目的核心设计思想是将停车场抽象为一个具有固定容量的栈结构，而将便道抽象为一个队列结构。当停车场已满时，新到达的车辆需要在便道上排队等待；当停车场内有车辆离开时，便道上等待的车辆可以依次进入停车场。栈和队列的组合充分体现了数据结构课程中关于栈的“后进先出”（LIFO）和队列的“先进先出”（FIFO）特性的实际应用。此外，为了支持按车牌号快速查找车辆信息，系统还采用了链表结构来存储车辆的详细记录，从而在插入、删除和遍历操作之间取得较好的平衡。通过这样的设计，项目既能满足停车场管理的实际需求，又能充分展示所学数据结构知识的工程应用价值。
+
+本报告的其余部分将按照系统开发的自然逻辑展开：第二章介绍停车场管理系统的需求分析，详细说明系统应实现的功能模块及其性能要求；第三章给出系统的总体设计方案，包括数据结构选择、模块划分与接口设计；第四章详细描述各功能模块的算法设计与实现过程，展示关键代码片段并分析其时间复杂度与空间复杂度；第五章展示系统测试结果，通过多组测试用例验证系统功能的正确性和性能的合理性；最后一章对本次课程设计进行总结，反思设计与实现过程中的不足之处，并讨论未来可能的改进方向。
+
+\section*{项目背景与动机}
+
+停车场管理作为城市交通管理的重要组成部分，直接影响着城市交通的流畅性和市民的出行体验。在许多大型商业综合体、医院和办公楼中，停车位资源有限而车流量巨大，如何在有限的空间内实现车辆的有序管理，成为物业管理部门面临的重要挑战。传统的人工登记方式存在诸多弊端：一方面，手工记录容易出错，特别是在车流高峰期，工作人员难以准确记录每辆车的进出时间；另一方面，人工管理无法实时提供停车位的可用情况，导致车主需要在场内反复寻找车位，既浪费时间又增加了场内拥堵的风险。此外，人工计费过程繁琐且容易引发争议，影响了管理效率和服务质量。
+
+从计算机科学的角度来看，停车场管理问题具有典型的数据结构应用特征。停车场本身可以看作一个容量受限的栈，车辆只能从一端进入和离开，且离开时必须按照“后进先出”的原则操作——如果需要让某辆不在栈顶的车离开，就必须先让挡在它前面的车临时驶出。这种场景与栈的操作特性高度吻合，为栈这一基本数据结构的实际应用提供了理想的教学案例。与此同时，为了处理停车场已满时新到达的车辆，需要设置一个便道（或称候车区），让这些车辆按照到达顺序依次等待，这是队列“先进先出”特性的典型应用场景。因此，通过停车场管理系统的设计与实现，可以将课堂上学习的栈和队列这两种基础数据结构有机地结合起来，在解决实际问题的过程中加深对理论知识的理解。
+
+选择停车场管理系统作为课程设计题目，不仅因为其具有实际应用价值和良好的教学示范作用，还因为该系统具有适度的复杂性，能够较全面地锻炼学生的编程能力和系统设计能力。在功能层面，系统需要实现车辆的进出管理、费用计算、信息查询等多个模块，涉及多种数据结构的综合运用；在性能层面，系统需要保证操作的效率，特别是在车辆频繁进出的情况下，各项操作的时间复杂度应控制在合理范围内；在工程层面，系统需要具备良好的代码组织结构和清晰的模块划分，便于后续的功能扩展和维护。通过完成这样一个综合性的课程设计项目，可以帮助学生将数据结构的理论知识转化为实际的编程技能，为今后从事软件开发工作打下坚实的基础。
+
+\section*{研究目标与问题定义}
+
+为了使项目目标更加明确，本工作将“停车场管理系统”的设计与实现任务划分为三个彼此关联但侧重点不同的子目标。第一个子目标是正确选择并实现核心数据结构，包括用于模拟停车场的栈结构和用于模拟便道的队列结构，确保这些数据结构能够准确地反映停车场的实际运行规则。第二个子目标是在这些数据结构的基础上实现完整的功能模块，包括车辆到达处理、车辆离开处理、停车费用计算、车辆信息查询与停车场状态统计等，使系统具备实际可用的管理功能。第三个子目标是对系统进行全面测试，验证各功能模块的正确性，并对关键操作的时间复杂度和空间复杂度进行分析，确保系统在性能上满足实际应用的基本要求。
+
+在形式化定义上，可以将停车场管理系统的核心操作抽象为以下几类基本操作：
+\begin{itemize}
+  \item \textbf{车辆到达（Arrival）：} 当一辆车牌号为 $plate$ 的车辆到达时，系统需要判断停车场是否已满。如果未满，则将该车辆信息（包括车牌号、到达时间等）压入停车场栈 $S$；如果已满，则将该车辆加入便道队列 $Q$。
+  \item \textbf{车辆离开（Departure）：} 当一辆车牌号为 $plate$ 的车辆请求离开时，系统需要在停车场栈 $S$ 中查找该车辆。如果该车辆不在栈顶，则需要将其上方的所有车辆依次弹出并暂存到一个临时栈 $T$ 中，待目标车辆离开后，再将临时栈中的车辆依次压回停车场栈。车辆离开时需要根据停车时长计算费用。
+  \item \textbf{车辆查询（Query）：} 给定车牌号 $plate$，查询该车辆当前所处的位置（停车场内、便道上或不存在），并返回相关信息（如停车位置编号、已停车时长等）。
+  \item \textbf{状态统计（Statistics）：} 实时显示停车场和便道的当前状态，包括停车场已使用车位数、剩余车位数、便道排队车辆数等。
+\end{itemize}
+
+在性能指标方面，系统需要满足以下基本要求：车辆到达操作的时间复杂度应为 $O(1)$，确保新车能够快速入场；车辆离开操作的时间复杂度在最坏情况下为 $O(n)$（其中 $n$ 为停车场容量），但在平均情况下应尽可能接近 $O(1)$；车辆查询操作的时间复杂度应控制在 $O(n)$ 以内；系统的空间复杂度应与停车场容量和车辆数量成正比，避免不必要的内存浪费。此外，系统还应具备良好的可扩展性，便于在后续版本中增加新的功能模块（如车位预约、VIP 车辆优先等）。
+
+通过上述目标设定和问题定义，读者可以清楚地了解本项目的核心任务和技术要求。在后续章节中，将详细阐述如何通过合理的系统设计和算法实现来达成这些目标，并通过实验结果验证系统的有效性和实用性。
+
+\section*{核心数据结构选择}
+
+在停车场管理系统的设计中，数据结构的选择直接影响到系统功能的实现效果和运行效率。本项目的核心设计思想是根据停车场和便道的实际运行特点，选择与其特性相匹配的数据结构。
+
+对于停车场本身，由于车辆只能从一个入口进入和离开，且场内空间有限，新到达的车辆停在最外侧，离开时必须让挡路的车先出，这与栈的“后进先出”特性完全吻合。因此，本项目采用\textbf{顺序栈}来模拟停车场。顺序栈使用数组实现，具有访问速度快、实现简单的优点，非常适合容量固定的停车场场景。栈的主要操作包括压栈（Push）、弹栈（Pop）和取栈顶元素（Top），这些操作的时间复杂度均为 $O(1)$，能够满足车辆快速进出的需求。
+
+对于便道，当停车场已满时，新到达的车辆需要在便道上按到达顺序依次等待，一旦停车场有车位空出，等待时间最长的车辆（即最早到达的车辆）应优先进入。这种“先到先服务”的规则与队列的“先进先出”特性高度一致。因此，本项目采用\textbf{链式队列}来模拟便道。链式队列使用链表实现，相比顺序队列不会出现假溢出现象，且不需要预先设定固定容量，能够灵活应对不同规模的等待车辆。队列的主要操作包括入队（Enqueue）和出队（Dequeue），时间复杂度同样为 $O(1)$。
+
+此外，为了支持按车牌号快速查询车辆信息，系统还需要维护一个车辆信息表。考虑到车辆进出的频繁性和信息检索的需求，本项目采用\textbf{单向链表}来存储所有在场车辆的详细记录。每个链表节点包含车辆的车牌号、进入时间、停车位置等信息。虽然链表的查询操作时间复杂度为 $O(n)$，但其插入和删除操作无需移动大量元素，且能够动态分配内存，在车辆数量不确定的情况下更加灵活高效。
+
+综上所述，本项目通过“顺序栈+链式队列+单向链表”的组合方案，充分发挥了不同数据结构的优势，既保证了系统核心功能的正确实现，又在性能和可扩展性方面达到了较好的平衡。这种设计思路体现了数据结构课程中根据问题特点选择合适数据结构的核心原则，也为后续的算法设计和代码实现奠定了坚实的基础。
+
+\cleardoublepage
+\chapter{需求分析与系统设计}
+
+本章重点在于把系统需求讲清楚，并给出总体设计方案。读者在看完本章后，应当能够理解系统应该具备哪些功能，以及采用怎样的整体架构来实现这些功能。
+
+\section{功能需求分析}
+
+停车场管理系统应具备以下基本功能：
+
+\begin{itemize}
+  \item \textbf{车辆到达处理：} 当车辆到达时，系统判断停车场是否有空位。若有空位则安排进入停车场并分配车位编号；若无空位则引导车辆进入便道排队等待；
+  \item \textbf{车辆离开处理：} 当车辆离开时，系统根据车牌号查找车辆位置。若车辆在停车场内，则计算停车费用并处理离场；若停车场有车离开且便道有车等待，则自动让便道队首车辆进入停车场；
+  \item \textbf{车辆信息查询：} 根据车牌号查询车辆当前状态，包括所在位置（停车场/便道/不在场）、停车位编号、已停车时长等；
+  \item \textbf{停车场状态显示：} 实时显示停车场使用情况，包括总车位数、已用车位数、剩余车位数、便道等待车辆数等统计信息；
+  \item \textbf{费用计算功能：} 根据停车时长自动计算停车费用，支持不同时段的差异化收费标准（如前2小时每小时5元，之后每小时3元）。
+\end{itemize}
+
+\section{性能需求分析}
+
+\begin{itemize}
+  \item \textbf{时间效率：} 车辆到达和离开操作应在常数时间或线性时间内完成，避免长时间等待；
+  \item \textbf{空间效率：} 系统内存占用应与实际车辆数量成正比，避免空间浪费；
+  \item \textbf{可靠性：} 系统应能正确处理各种边界情况，如停车场已满、便道为空、车辆不存在等；
+  \item \textbf{可扩展性：} 系统设计应便于后续功能扩展，如增加多个停车场、VIP车位预留等功能。
+\end{itemize}
+
+\section{总体设计方案}
+
+系统采用模块化设计思想，主要包括以下几个功能模块：
+
+\begin{itemize}
+  \item \textbf{数据结构模块：} 实现栈、队列、链表等基础数据结构；
+  \item \textbf{车辆管理模块：} 处理车辆的到达、离开、查询等操作；
+  \item \textbf{费用计算模块：} 根据停车时长计算费用；
+  \item \textbf{显示统计模块：} 显示停车场和便道的当前状态；
+  \item \textbf{主控模块：} 提供用户交互界面，调用各功能模块完成任务。
+\end{itemize}
+
+下面给出系统功能模块图的示例（使用 \LaTeX 绘图功能）：
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+    node distance=1cm and 1.2cm,
+    module/.style={
+      rectangle,
+      rounded corners,
+      draw=blue!60,
+      fill=blue!5,
+      thick,
+      minimum width=3cm,
+      minimum height=1cm,
+      text centered,
+      font=\small
+    },
+    submodule/.style={
+      rectangle,
+      rounded corners,
+      draw=green!60,
+      fill=green!5,
+      thick,
+      minimum width=1.2cm,
+      minimum height=0.8cm,
+      text centered,
+      font=\small
+    },
+    mainmodule/.style={
+      rectangle,
+      rounded corners,
+      draw=red!60,
+      fill=red!10,
+      very thick,
+      minimum width=3.5cm,
+      minimum height=1.2cm,
+      text centered,
+      font=\small\bfseries
+    },
+    arrow/.style={
+      -Stealth,
+      thick,
+      draw=gray!70,
+      rounded corners=3pt
+    }
+  ]
+
+  % 主控模块（最上层）
+  \node[mainmodule] (main) at (0, 0) {主控模块（界面）};
+
+  % 第二层：功能模块
+  \node[module, below left=of main, xshift=-1.5cm] (vehicle) {车辆管理模块};
+  \node[module, below=2cm of main] (fee) {费用计算模块};
+  \node[module, below right=of main, xshift=1.5cm] (display) {显示统计模块};
+
+  % 第三层：车辆管理子模块
+  \node[submodule, below=of vehicle, xshift=-1.5cm] (arrive) {到达};
+  \node[submodule, below=of vehicle, xshift=0cm] (depart) {离开};
+  \node[submodule, below=of vehicle, xshift=1.5cm] (query) {查询};
+
+  % 第三层：显示统计子模块
+  \node[submodule, below=of display, xshift=-1cm] (status) {状态显示};
+  \node[submodule, below=of display, xshift=1cm] (report) {报表生成};
+
+  % 底层：数据结构模块
+  \node[module, below=5cm of main] (datastructure) {数据结构模块};
+
+  \node[submodule, below=of datastructure, xshift=-3cm] (stack) {停车场栈};
+  \node[submodule, below=of datastructure, xshift=0cm] (queue) {便道队列};
+  \node[submodule, below=of datastructure, xshift=3cm] (list) {车辆链表};
+
+  % ===== 定义中间转折高度 =====
+  \coordinate (midlevel) at (0, -5);  % 定义统一的中间转折线高度
+
+  % ===== 智能肘线连接 =====
+  
+  % 主控到功能模块
+  \draw[arrow] (main.south) |- (0, -1) - | (vehicle.north);
+  \draw[arrow] (main) -- (fee);  % 垂直对齐，用直线
+  \draw[arrow] (main.south) |- (0, -1) - | (display.north);
+
+  % 车辆管理到子模块
+  \draw[arrow] (vehicle.south) |- (-6.3, -3.1) - | (arrive.north);
+  \draw[arrow] (vehicle) -- (depart);  % 垂直对齐
+  \draw[arrow] (vehicle.south) |- (-5.5, -3.1) - | (query.north);
+
+  % 显示统计到子模块
+  \draw[arrow] (display.south) |- (5.5, -3.1) - | (status.north);
+  \draw[arrow] (display.south) |- (6.3, -3.1) - | (report.north);
+
+  % 功能模块到数据结构
+  % 方法：起点 |- 中间高度与目标x坐标的交点 -- 终点
+  \draw[arrow] (arrive.south) |- (midlevel -| datastructure.north) -- (datastructure.north);
+  \draw[arrow] (depart.south) |- (midlevel -| datastructure.north) -- (datastructure.north);
+  \draw[arrow] (query.south) |- (midlevel -| datastructure.north) -- (datastructure.north);
+  \draw[arrow] (status.south) |- (midlevel -| datastructure.north) -- (datastructure.north);
+  
+  % 费用计算直接连接（垂直对齐）
+  \draw[arrow] (fee) -- (datastructure);
+
+  % 数据结构到具体实现
+  \draw[arrow] (datastructure.south) |- (0, -7.1) - | (stack.north);
+  \draw[arrow] (datastructure) -- (queue);  % 垂直对齐
+  \draw[arrow] (datastructure.south) |- (0, -7.1) - | (list.north);
+
+  % 费用计算与车辆离开的连接
+  \coordinate (feedep) at ($ (depart.north) + (0, 0.2) $);
+  \draw[-Stealth, thick, dashed, draw=orange, rounded corners=3pt] 
+    (depart.north) -- (feedep) |- (fee.west);
+
+  % 添加背景框
+  \begin{scope}[on background layer]
+    \node[
+      rectangle,
+      rounded corners,
+      draw=gray!30,
+      fill=gray!2,
+      fit=(vehicle)(fee)(display)(arrive)(depart)(query)(status)(report),
+      inner sep=0.3cm,
+      label={[anchor=north west, xshift=1.5cm, yshift=-0.2cm]above:业务逻辑层}
+    ] {};
+
+    \node[
+      rectangle,
+      rounded corners,
+      draw=gray!30,
+      fill=gray!2,
+      fit=(datastructure)(stack)(queue)(list),
+      inner sep=0.3cm,
+      label={[anchor=north west, xshift=2cm, yshift=-0.2cm]above:数据层}
+    ] {};
+  \end{scope}
+
+  \end{tikzpicture}
+  \caption{停车场管理系统功能模块图}
+\end{figure}
+
+
+\section{数据结构设计}
+
+\subsection{停车场栈的设计}
+
+停车场采用顺序栈实现，主要结构定义如下：
+
+\begin{codeblock}
+// 车辆信息结构
+typedef struct {
+    char plate[20];     // 车牌号
+    time_t arriveTime;  // 到达时间
+    int position;       // 停车位置
+} Car;
+
+// 停车场栈结构
+typedef struct {
+    Car data[MAX_SIZE]; // 栈数组
+    int top;            // 栈顶指针
+    int capacity;       // 栈容量
+} ParkingStack;
+\end{codeblock}
+
+\subsection{便道队列的设计}
+
+便道采用链式队列实现，主要结构定义如下：
+
+\begin{codeblock}
+// 队列节点
+typedef struct QNode {
+    Car data;
+    struct QNode *next;
+} QueueNode;
+
+// 链式队列
+typedef struct {
+    QueueNode *front;  // 队头指针
+    QueueNode *rear;   // 队尾指针
+    int size;          // 队列长度
+} WaitingQueue;
+\end{codeblock}
+
+\cleardoublepage
+\chapter{详细设计与算法实现}
+
+本章详细描述各功能模块的算法设计思路，展示关键代码实现，并对算法的时间复杂度和空间复杂度进行分析。
+
+\section{栈和队列的基本操作}
+
+\subsection{栈的初始化与基本操作}
+
+栈的初始化非常简单，只需将栈顶指针设为 -1 即可：
+
+\begin{codeblock}
+// 初始化停车场栈
+void initStack(ParkingStack *s, int capacity) {
+    s->top = -1;
+    s->capacity = capacity;
+}
+
+// 判断栈是否为空
+int isEmpty(ParkingStack *s) {
+    return s->top == -1;
+}
+
+// 判断栈是否已满
+int isFull(ParkingStack *s) {
+    return s->top == s->capacity - 1;
+}
+\end{codeblock}
+
+压栈操作将新元素添加到栈顶，时间复杂度为 $O(1)$：
+
+\begin{codeblock}
+// 车辆进入停车场（压栈）
+int push(ParkingStack *s, Car car) {
+    if (isFull(s)) {
+        return 0;  // 停车场已满
+    }
+    s->data[++s->top] = car;
+    s->data[s->top].position = s->top + 1;
+    return 1;
+}
+\end{codeblock}
+
+\subsection{队列的初始化与基本操作}
+
+链式队列的初始化需要创建头节点：
+
+\begin{codeblock}
+// 初始化便道队列
+void initQueue(WaitingQueue *q) {
+    q->front = q->rear = NULL;
+    q->size = 0;
+}
+
+// 入队操作
+void enqueue(WaitingQueue *q, Car car) {
+    QueueNode *node = (QueueNode*)malloc(sizeof(QueueNode));
+    node->data = car;
+    node->next = NULL;
+    
+    if (q->rear == NULL) {
+        q->front = q->rear = node;
+    } else {
+        q->rear->next = node;
+        q->rear = node;
+    }
+    q->size++;
+}
+\end{codeblock}
+
+\section{车辆到达处理算法}
+
+车辆到达时的处理流程如下：
+
+\begin{enumerate}
+  \item 检查停车场是否已满；
+  \item 如果未满，将车辆信息压入停车场栈；
+  \item 如果已满，将车辆信息加入便道队列。
+\end{enumerate}
+
+算法的伪代码表示：
+
+\begin{codeblock}
+// 车辆到达处理
+void carArrival(ParkingStack *parking, 
+                WaitingQueue *waiting, 
+                char *plate) {
+    Car car;
+    strcpy(car.plate, plate);
+    car.arriveTime = time(NULL);
+    
+    if (!isFull(parking)) {
+        push(parking, car);
+        printf("车辆 %s 已进入停车场，车位号 %d\n", 
+               plate, parking->top + 1);
+    } else {
+        enqueue(waiting, car);
+        printf("停车场已满，车辆 %s 进入便道等待\n", 
+               plate);
+    }
+}
+\end{codeblock}
+
+\textbf{复杂度分析：} 该算法的时间复杂度为 $O(1)$，空间复杂度为 $O(1)$（不考虑数据结构本身占用的空间）。
+
+\section{车辆离开处理算法}
+
+车辆离开处理是系统中最复杂的操作，需要考虑以下情况：
+
+\begin{enumerate}
+  \item 查找目标车辆在停车场中的位置；
+  \item 如果车辆不在栈顶，需要将其上方的车辆暂时移出；
+  \item 目标车辆离开后，将暂时移出的车辆依次放回；
+  \item 如果便道有车等待，让队首车辆进入停车场。
+\end{enumerate}
+
+关键代码如下：
+
+\begin{codeblock}
+// 车辆离开处理
+void carDeparture(ParkingStack *parking, 
+                  WaitingQueue *waiting, 
+                  char *plate) {
+    ParkingStack temp;  // 临时栈
+    initStack(&temp, parking->capacity);
+    
+    int found = 0;
+    Car leavingCar;
+    
+    // 查找目标车辆
+    while (!isEmpty(parking)) {
+        Car car = pop(parking);
+        if (strcmp(car.plate, plate) == 0) {
+            leavingCar = car;
+            found = 1;
+            break;
+        }
+        push(&temp, car);  // 暂存到临时栈
+    }
+    
+    // 将临时栈的车辆放回停车场
+    while (!isEmpty(&temp)) {
+        push(parking, pop(&temp));
+    }
+    
+    if (found) {
+        // 计算停车费用
+        double fee = calculateFee(leavingCar.arriveTime);
+        printf("车辆 %s 离开，停车费用 %.2f 元\n", 
+               plate, fee);
+        
+        // 如果便道有车，让队首进入
+        if (waiting->size > 0) {
+            Car waitingCar = dequeue(waiting);
+            push(parking, waitingCar);
+            printf("便道车辆 %s 进入停车场\n", 
+                   waitingCar.plate);
+        }
+    }
+}
+\end{codeblock}
+
+\textbf{复杂度分析：} 在最坏情况下（目标车辆在栈底），需要遍历整个停车场栈，时间复杂度为 $O(n)$，其中 $n$ 为停车场容量。空间复杂度为 $O(n)$，因为需要使用临时栈。
+
+\cleardoublepage
+\chapter{测试与分析}
+
+本章展示系统的测试过程和测试结果，通过多组测试用例验证系统功能的正确性。
+
+\section{测试环境}
+
+\begin{itemize}
+  \item \textbf{操作系统：} Windows 11 / Ubuntu 22.04
+  \item \textbf{编译器：} GCC 11.4.0 / MinGW-w64 GCC 13.1.0
+  \item \textbf{开发工具：} Visual Studio Code / CLion
+  \item \textbf{编译选项：} \texttt{gcc -o parking parking.c -std=c11 -Wall}
+\end{itemize}
+
+\section{测试用例设计}
+
+本项目设计了以下几组测试用例来验证系统功能，详见表\ref{tab:testcase}。
+
+\begin{table}[htbp]
+  \centering
+  \caption{测试用例说明}
+  \label{tab:testcase}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{测试编号} & \textbf{测试目的} & \textbf{测试内容} \\
+    \midrule
+    TC-01 & 基本进出功能 & 车辆正常进入和离开停车场 \\
+    TC-02 & 停车场满载测试 & 停车场满时车辆进入便道 \\
+    TC-03 & 便道车辆进入 & 停车场有空位时便道车辆自动进入 \\
+    TC-04 & 车辆查询功能 & 按车牌号查询车辆信息 \\
+    TC-05 & 边界条件测试 & 空停车场、满停车场等边界情况 \\
+    TC-06 & 费用计算测试 & 验证不同停车时长的费用计算 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{测试结果展示}
+
+以下是一组典型测试用例的运行结果：
+
+\begin{codeblock}
+========== 停车场管理系统 ==========
+停车场容量：5
+
+[操作] 车辆 A001 到达
+车辆 A001 已进入停车场，车位号 1
+
+[操作] 车辆 A002 到达
+车辆 A002 已进入停车场，车位号 2
+
+[查询] 停车场状态
+停车场：5/2 (总数/已用)
+便道等待：0 辆
+
+[操作] 车辆 A001 离开
+车辆 A001 离开，停车费用 15.00 元
+\end{codeblock}
+
+\section{性能分析}
+
+表\ref{tab:complex}对系统各主要操作的时间复杂度进行总结。
+
+\begin{table}[htbp]
+  \centering
+  \caption{算法时间复杂度分析}
+  \label{tab:complex}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{操作} & \textbf{最好情况} & \textbf{最坏情况} \\
+    \midrule
+    车辆到达 & $O(1)$ & $O(1)$ \\
+    车辆离开（在栈顶） & $O(1)$ & $O(1)$ \\
+    车辆离开（在栈底） & $O(n)$ & $O(n)$ \\
+    车辆查询 & $O(1)$ & $O(n)$ \\
+    状态显示 & $O(1)$ & $O(1)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\cleardoublepage
+\chapter{总结与展望}
+
+\section{工作总结}
+
+本课程设计完成了一个基于栈和队列的停车场管理系统。系统采用顺序栈模拟停车场，链式队列模拟便道，实现了车辆的进出管理、停车费用计算、车辆信息查询和状态统计等基本功能。通过该项目的设计与实现，将课堂上学习的数据结构理论知识应用到了实际问题的解决中，加深了对栈和队列这两种基本数据结构的理解，同时也锻炼了C语言编程能力和系统设计能力。
+
+在数据结构方面，通过合理选择栈和队列这两种数据结构，充分利用了它们的特性来模拟停车场的实际运行规则。顺序栈的“后进先出”特性完美契合了停车场车辆进出的实际情况，而链式队列的“先进先出”特性则很好地解决了便道车辆的排队等待问题。在算法设计方面，实现了车辆到达、离开、查询等核心功能，并对关键算法的时间复杂度和空间复杂度进行了分析，确保了系统在性能上满足实际应用的基本要求。
+
+\section{主要收获}
+
+通过本次课程设计，主要有以下几方面的收获：
+
+\begin{enumerate}
+  \item \textbf{数据结构应用能力：} 学会了如何根据实际问题的特点选择合适的数据结构，并将理论知识应用到具体的系统设计中；
+  \item \textbf{编程实践能力：} 熟练掌握了C语言中结构体、指针、动态内存分配等重要概念的使用，提高了代码编写和调试能力；
+  \item \textbf{系统设计思维：} 学会了将复杂问题分解为多个功能模块，通过模块化设计提高代码的可读性和可维护性；
+  \item \textbf{算法分析能力：} 掌握了如何分析算法的时间复杂度和空间复杂度，能够评估不同算法方案的优劣；
+  \item \textbf{问题解决能力：} 在项目实施过程中遇到了许多实际问题（如边界条件处理、内存管理等），通过查阅资料和实践探索最终得到了解决。
+\end{enumerate}
+
+\section{不足与改进方向}
+
+虽然本系统实现了基本的停车场管理功能，但仍存在一些不足之处，未来可从以下几个方面进行改进：
+
+\begin{enumerate}
+  \item \textbf{数据持久化：} 当前系统的数据仅存储在内存中，程序退出后数据丢失。可以考虑引入文件操作，将车辆信息和停车记录保存到文件中，实现数据的持久化存储；
+  \item \textbf{查询效率优化：} 目前按车牌号查询车辆需要遍历整个停车场或便道，时间复杂度为 $O(n)$。可以引入哈希表来存储车牌号与车辆位置的映射关系，将查询时间复杂度降低到 $O(1)$；
+  \item \textbf{多停车场管理：} 扩展系统以支持多个停车场的联合管理，实现停车场之间的车位共享和车辆调度；
+  \item \textbf{图形化界面：} 当前系统采用命令行交互方式，用户体验有限。可以考虑开发图形化界面，提供更加直观友好的操作方式；
+  \item \textbf{智能调度算法：} 引入更加智能的车位分配算法，如根据车辆类型、预计停车时长等因素进行优化调度；
+  \item \textbf{统计分析功能：} 增加数据统计和分析功能，如停车高峰时段分析、收入统计、车位利用率计算等，为停车场运营管理提供决策支持。
+\end{enumerate}
+
+总的来说，通过本次课程设计的学习和实践，不仅巩固了数据结构的理论知识，也培养了实际编程能力和工程实践能力，为今后进一步学习更复杂的数据结构和算法打下了良好的基础。
+
+\clearpage
+\cleardoublepage
+
+% 以下是参考文献部分
+\phantomsection
+\addcontentsline{toc}{chapter}{参考文献}
+
+% {99} 是最宽的编号，为两位数编号预留空间
+\begin{thebibliography}{99}
+
+% 类型：专著 [M]
+\bibitem[1]{yanweimin} 严蔚敏, 李冬梅, 吴伟民. 数据结构（C语言版）[M]. 第2版. 北京: 人民邮电出版社, 2015.
+
+% 类型：专著 [M]
+\bibitem[2]{wanghongmei} 王红梅, 胡明, 王涛. 数据结构（C语言版）学习指导[M]. 北京: 清华大学出版社, 2019.
+
+% 类型：专著 [M]
+\bibitem[3]{yinrenkun} 殷人昆. 数据结构（用面向对象方法与C++语言描述）[M]. 第2版. 北京: 清华大学出版社, 2007.
+
+% 类型：联机资源 [EB/OL]
+\bibitem[4]{cprog} C语言中文网. C语言教程[EB/OL]. [引用日期 2025-12-20]. 可获取自: \url{http://c.biancheng.net/}
+
+\end{thebibliography}
+
+\appendix
+
+\cleardoublepage
+\chapter{附录说明}
+
+附录部分可以包含：
+
+\begin{itemize}
+  \item 完整的源代码清单（主体报告中只保留关键片段）；
+  \item 详细的测试数据和运行日志；
+  \item 系统流程图、数据流图等补充图表；
+  \item 开发过程中遇到的问题及解决方案记录。
+\end{itemize}
+
+\section{主要源代码}
+
+这里可以附上主要的头文件和源文件：
+
+\begin{codeblock}
+// parking.h - 头文件
+#ifndef PARKING_H
+#define PARKING_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#define MAX_SIZE 100
+#define MAX_PLATE 20
+
+// 车辆信息结构
+typedef struct {
+    char plate[MAX_PLATE];
+    time_t arriveTime;
+    int position;
+} Car;
+
+// 停车场栈结构
+typedef struct {
+    Car data[MAX_SIZE];
+    int top;
+    int capacity;
+} ParkingStack;
+
+// 队列节点
+typedef struct QNode {
+    Car data;
+    struct QNode *next;
+} QueueNode;
+
+// 便道队列
+typedef struct {
+    QueueNode *front;
+    QueueNode *rear;
+    int size;
+} WaitingQueue;
+
+// 函数声明
+void initStack(ParkingStack *s, int capacity);
+int push(ParkingStack *s, Car car);
+Car pop(ParkingStack *s);
+void initQueue(WaitingQueue *q);
+void enqueue(WaitingQueue *q, Car car);
+Car dequeue(WaitingQueue *q);
+
+#endif
+\end{codeblock}
+
+\section{测试数据示例}
+
+以下是部分测试数据及预期输出：
+
+\begin{codeblock}
+测试场景：停车场容量为3，依次有5辆车到达
+
+输入序列：
+A A001
+A A002
+A A003
+A A004
+A A005
+
+预期输出：
+车辆 A001 已进入停车场，车位号 1
+车辆 A002 已进入停车场，车位号 2
+车辆 A003 已进入停车场，车位号 3
+停车场已满，车辆 A004 进入便道等待
+停车场已满，车辆 A005 进入便道等待
+\end{codeblock}
+
+\end{document}
