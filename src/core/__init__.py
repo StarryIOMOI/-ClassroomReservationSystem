@@ -11,6 +11,9 @@ from .Class import Student
 from .Class import Teacher
 from .Tree import TreeNode
 from .Classroom_System import build_tree
+from .Classroom_System import load_building_data
+from .Classroom_System import load_area_data
+from .Classroom_System import load_floor_data
 from .Classroom_System import load_classroom_data
 from .Classroom_System import print_all_buildings_summary
 from .Classroom_System import query_building_by_id
@@ -24,3 +27,7 @@ from .Schedule_System import load_course_data
 from .Schedule_System import Schedule_System
 from .Schedule_System import reserve
 from .User_System import load_courses_data
+from .Manager_System import add_building
+from .Manager_System import add_area0
+from .Manager_System import add_floor
+from .Manager_System import add_classroom

@@ -1,7 +1,7 @@
 import sys
 from src.service import student_log_in, teacher_log_in, student_menu, teacher_menu
 from src.core import build_tree, get_time
-from src.utils import clear_screen, pause
+from src.utils import clscreen, pause
     
 def log_in():
     """登录"""

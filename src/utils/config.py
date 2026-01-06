@@ -9,7 +9,7 @@ def clear_screen():
 
 def pause():
     """暂停，等待用户按回车，用于展示操作结果"""
-    input("\n按回车键继续...")
+    input("按回车键继续...")
 
 # print("项目根目录:", BASE_DIR)
 # print("数据库路径:", DB_PATH)

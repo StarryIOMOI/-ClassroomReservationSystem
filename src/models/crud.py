@@ -28,7 +28,7 @@ def create_teacher_user(teacher_id, name, password_hash = "123456", phone_number
         cursor.execute(sql, (
             status,
             teacher_id, 
-            str,
+            password_hash,
             name, 
             phone_number, 
             email, 
@@ -66,7 +66,7 @@ def create_student_user(student_id, name, class_id, password_hash = "123456", ph
         cursor.execute(sql, (
             status,
             student_id,
-            str,
+            password_hash,
             name,
             class_id,
             phone_number,
@@ -90,7 +90,7 @@ def create_student_user(student_id, name, class_id, password_hash = "123456", ph
 # 空间资源管理模块
 #========================================
 
-def create_building(building_id, building_name, status=1, description = None):
+def create_building(building_id, building_name, status = 1, description = None):
     """向数据库添加教学楼"""
     conn = get_connection()
     cursor = conn.cursor()
