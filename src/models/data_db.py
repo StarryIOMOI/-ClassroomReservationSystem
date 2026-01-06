@@ -194,3 +194,6 @@ def init_db():
         conn.commit()
         conn.close()
         print(f"数据库 {db_name} 定义完成。")
+
+# if __name__ == "__main__":
+#     init_db()

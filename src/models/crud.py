@@ -1,6 +1,10 @@
 import sqlite3
 import sys
 import os
+from core.Class import Buildings
+from core.Class import Areas
+from core.Class import Floors
+from core.Class import Classrooms
 # import hashlib
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -8,10 +12,10 @@ sys.path.append(current_dir)
 from models import get_connection
 
 #========================================
-# 用户管理模块 (修正版)
+# 用户管理模块
 #========================================
 
-def create_teacher_user(teacher_id, name, password_hash="123456", phone_number=None, email=None, class_id=None, club_id=None, status=1):
+def create_teacher_user(teacher_id, name, password_hash = "123456", phone_number = None, email = None, class_id = None, club_id = None, status = 0):
     """
     向数据库添加教师用户
     修正说明: 数据库字段为 class_id 和 club_id
@@ -28,7 +32,7 @@ def create_teacher_user(teacher_id, name, password_hash="123456", phone_number=N
         cursor.execute(sql, (
             status,
             teacher_id, 
-            str(password_hash), # 确保存储为字符串 
+            password_hash,
             name, 
             phone_number, 
             email, 
@@ -49,7 +53,7 @@ def create_teacher_user(teacher_id, name, password_hash="123456", phone_number=N
     finally:
         conn.close()
 
-def create_student_user(student_id, name, class_id, password_hash="123456", phone_number=None, email=None, status=1):
+def create_student_user(student_id, name, class_id, password_hash = "123456", phone_number = None, email = None, status = 0):
     """
     向数据库添加学生用户
     修正说明: 数据库字段为 class_id
@@ -66,7 +70,7 @@ def create_student_user(student_id, name, class_id, password_hash="123456", phon
         cursor.execute(sql, (
             status,
             student_id,
-            str(password_hash),
+            password_hash,
             name,
             class_id,
             phone_number,
@@ -87,10 +91,10 @@ def create_student_user(student_id, name, class_id, password_hash="123456", phon
         conn.close()
 
 #========================================
-# 空间资源管理模块 (新增)
+# 空间资源管理模块
 #========================================
 
-def create_building(building_id, building_name, status=1, description=None):
+def create_building(building_id, building_name, status = 1, description = None):
     """向数据库添加教学楼"""
     conn = get_connection()
     cursor = conn.cursor()
@@ -113,13 +117,11 @@ def create_building(building_id, building_name, status=1, description=None):
     finally:
         conn.close()
 
-def create_area(area_id, area_name, building_id, status=1):
+def create_area(area_id, area_name, building_id, status = 1):
     """向数据库添加教学楼区域"""
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        # 这里并未强制检查 building_id 是否存在（虽然定义了外键，但 SQLite 默认可能不开启外键检查，除非 conn 显式开启）
-        # data_db.py 中开启了 PRAGMA foreign_keys = ON，所以如果 building_id 不存在会报错
         sql = '''
         INSERT INTO areas 
         (area_id, area_name, building_id, status) 
@@ -138,7 +140,7 @@ def create_area(area_id, area_name, building_id, status=1):
     finally:
         conn.close()
 
-def create_floor(floor_id, floor_name, area_id, status=1):
+def create_floor(floor_id, floor_name, area_id, status = 1):
     """向数据库添加楼层"""
     conn = get_connection()
     cursor = conn.cursor()
@@ -161,7 +163,7 @@ def create_floor(floor_id, floor_name, area_id, status=1):
     finally:
         conn.close()
 
-def create_classroom(classroom_id, classroom_name, floor_id, status=1, capacity=30, type="普通教室"):
+def create_classroom(classroom_id, classroom_name, floor_id, type, status = 1, capacity = 30):
     """向数据库添加教室"""
     conn = get_connection()
     cursor = conn.cursor()
@@ -183,3 +185,102 @@ def create_classroom(classroom_id, classroom_name, floor_id, status=1, capacity=
         return False
     finally:
         conn.close()
+
+#========================================
+# 数据资源管理模块
+#========================================
+
+def create_class(class_id, class_name):
+    """
+    向数据库添加班级
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        sql = '''
+        INSERT INTO classes (class_id, class_name) 
+        VALUES (?, ?)
+        '''
+        cursor.execute(sql, (class_id, class_name))
+        conn.commit()
+        print(f"✅ 班级 '{class_name}' (ID: {class_id}) 添加成功！")
+        return True
+
+    except sqlite3.IntegrityError as e:
+        print(f"❌ 添加失败：班级ID '{class_id}' 或 名称 '{class_name}' 已存在。")
+        return False
+        
+    except Exception as e:
+        print(f"❌ 添加失败：发生错误 {e}")
+        return False
+        
+    finally:
+        conn.close()
+
+#========================================
+# 加载数据
+#========================================
+def load_building_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM buildings")
+    building_rows = cursor.fetchall()
+
+    buildings = [
+        Buildings(row["building_id"], row["building_name"], row["status"])
+        for row in building_rows
+    ]
+
+    conn.close()
+    return buildings
+
+def load_area_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM areas")
+    area_rows = cursor.fetchall()
+
+    areas = [
+        Areas(row["area_id"], row["area_name"], row["building_id"], row["status"])
+        for row in area_rows
+    ]
+
+    conn.close()
+    return areas
+
+def load_floor_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM floors")
+    floor_rows = cursor.fetchall()
+
+    floors = [
+        Floors(row["floor_id"], row["floor_name"], row["area_id"], row["status"])
+        for row in floor_rows
+    ]
+
+    conn.close()
+    return floors
+
+def load_classroom_data(): 
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM .classrooms")
+    classroom_rows = cursor.fetchall()
+
+    classrooms = [
+        Classrooms(row["classroom_id"], row["classroom_name"], row["floor_id"], row["status"])
+        for row in classroom_rows
+    ]
+
+    conn.close()
+    return classrooms
+
