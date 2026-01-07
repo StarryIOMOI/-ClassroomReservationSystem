@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime as dt, timedelta
 from models import load_semester_data, load_timeslots_data
 from models import get_connection
-from core import Semesters, Timenow
+from core import Timenow
 
 # 获取当前时间
 current_time = dt.now()
@@ -45,34 +45,37 @@ def locate_time(semesters):
             if year_now == st.year:
                 if st.month == month_now and st.day <= day_now:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s)
+                    time = Timenow(s.name, week, s.id)
                 elif st.month < month_now < et.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
                 elif et.month == month_now and day_now <= et.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
                     
         else:
             if year_now == st.year:
                 if month_now == st.month and day_now >= st.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
                 elif month_now > st.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
             elif year_now == et.year:
                 if month_now == et.month and day_now <= et.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
                 elif month_now < et.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
             elif st.year < year_now < et.year:
                 week = get_school_week(start_date_str, current_date_str)
-                return Timenow(s.name, week, s) 
-    
-    return None
+                time = Timenow(s.name, week, s.id)
+                
+    if time:
+        return time
+    else:
+        return None
 
 def to_minute(time):
     _time = dt.strptime(time, "%H:%M")

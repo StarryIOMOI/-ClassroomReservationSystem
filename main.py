@@ -41,6 +41,7 @@ def log_in():
 
         elif choice == "0":
             print("退出。")
+            clear_screen()
             sys.exit(0)
 
         else:

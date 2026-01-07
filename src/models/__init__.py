@@ -20,4 +20,6 @@ from .crud import load_timeslots_data
 from .crud import load_special_semester_data
 from .crud import activate_student_status
 from .crud import activate_teacher_status
+from .crud import new_student_password
+from .crud import new_teacher_password
 from .crud import print_course_table

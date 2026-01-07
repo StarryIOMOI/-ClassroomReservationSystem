@@ -497,9 +497,13 @@ def activate_student_status(student_id, password):
         if current_status != 0:
             print(f"⚠️ 激活失败：学生 '{name}' 当前状态为 {current_status} (非0)，无需激活")
             return False
+        
+        new_password = input("激活账号请输入新密码:")
 
         sql_update = "UPDATE student_users SET status = 1 WHERE student_id = ?"
         cursor.execute(sql_update, (student_id,))
+        sql_update = "UPDATE student_users SET password_hash = ? WHERE student_id = ?"
+        cursor.execute(sql_update, (new_password, student_id))
         conn.commit()
         
         print(f"✅ 成功：学生 '{name}' ({student_id}) 状态已激活 (0 -> 1)")
@@ -537,12 +541,72 @@ def activate_teacher_status(teacher_id, password):
             print(f"⚠️ 激活失败：教师 '{name}' 当前状态为 {current_status} (非0)，无需激活")
             return False
 
+        new_password = input("激活账号请输入新密码:")
+
         sql_update = "UPDATE teacher_users SET status = 1 WHERE teacher_id = ?"
         cursor.execute(sql_update, (teacher_id,))
+        sql_update = "UPDATE teacher_users SET password_hash = ? WHERE teacher_id = ?"
+        cursor.execute(sql_update, (new_password, teacher_id))
         conn.commit()
         
         print(f"✅ 成功：教师 '{name}' ({teacher_id}) 状态已激活 (0 -> 1)")
         return True
+
+    except Exception as e:
+        print(f"❌ 系统错误：{e}")
+        return False
+    finally:
+        conn.close()
+
+def new_student_password(student):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        sql_check = "SELECT password_hash, name FROM student_users WHERE student_id = ?"
+        cursor.execute(sql_check, (student.id,))
+        
+        new_password1 = input("请输入新密码:")
+        new_password2 = input("请确认新密码:")
+
+        if new_password1 == new_password2:
+            sql_update = "UPDATE student_users SET password_hash = ? WHERE student_id = ?"
+            cursor.execute(sql_update, (new_password1, student.id))
+            conn.commit()
+        
+            print(f"✅ 学生 '{student.name}' ({student.id})成功修改密码 ")
+            return True
+        
+        else:
+            print(f"❌ 修改失败：两次密码不相同")
+            return
+
+    except Exception as e:
+        print(f"❌ 系统错误：{e}")
+        return False
+    finally:
+        conn.close()
+
+def new_teacher_password(teacher):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        sql_check = "SELECT password_hash, name FROM teacher_users WHERE teacher_id = ?"
+        cursor.execute(sql_check, (teacher.id,))
+        
+        new_password1 = input("请输入新密码:")
+        new_password2 = input("请确认新密码:")
+
+        if new_password1 == new_password2:
+            sql_update = "UPDATE teacher_users SET password_hash = ? WHERE teacher_id = ?"
+            cursor.execute(sql_update, (new_password1, teacher.id))
+            conn.commit()
+        
+            print(f"✅ 教师 '{teacher.name}' ({teacher.id})成功修改密码 ")
+            return True
+        
+        else:
+            print(f"❌ 修改失败：两次密码不相同")
+            return
 
     except Exception as e:
         print(f"❌ 系统错误：{e}")

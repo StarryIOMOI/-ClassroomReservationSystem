@@ -28,9 +28,10 @@ def manager_menu():
             users()
 
         elif choice == "3":
-            print("\n功能正在开发中...")
+            print("\n已选择：3. 课程管理")
             pause()
             clear_screen()
+            courses()
 
         elif choice == "0":
             print("\n退出")

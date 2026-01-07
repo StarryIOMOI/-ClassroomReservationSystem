@@ -1,16 +1,17 @@
 import sqlite3
 from core import Student
-from core import load_courses_data
+from core import load_courses_data,  query_classroom_schedule
 from core import print_all_buildings_summary
 from core import query_building_by_id
 from core import build_tree, get_time
-from models import get_connection, activate_student_status
+from models import get_connection, activate_student_status, new_student_password
 from utils import clear_screen, pause
 
 def student_active():
     id = input("请输入账号: ")
     password_input = input("请输入密码: ")
     pause()
+    clear_screen()
     clear_screen()
     activate_student_status(id, password_input)
     return
@@ -19,6 +20,7 @@ def student_log_in():
     id = input("请输入账号: ")
     password_input = input("请输入密码: ")
     pause()
+    clear_screen()
     clear_screen()
 
     conn = get_connection()
@@ -66,64 +68,113 @@ def show_student(student):
         if choice == "1":
             show_courses()
             pause()
+            clear_screen()
 
         elif choice == "2":
             print("\n功能正在开发中...")
             pause()
+            clear_screen()
 
         elif choice == "0":
             print("\n返回上一步。")
             pause()
+            clear_screen()
             return
 
         else:
             print("\n输入无效。")
             pause()
+            clear_screen()
 
-def show_courses(student):
+def show_courses(student, time):
     """展示所选课程"""
     while True:
         print(f"\n======== 欢迎 {student.name} ========")
         print(f"当前用户: {student.id} | 班级: {student.class_id}\n")
 
-        load_courses_data(student.class_id, 0)
+        load_courses_data(student.class_id, 0, time.semester_id)
 
         choice = input("输入'0'返回: ")
 
         if choice == "0":
             print("\n返回上一步。")
             pause()
+            clear_screen()
             return
 
         else:
             print("\n输入无效。")
             pause()
+            clear_screen()
+
+def reserve_classroom(student, root, time):
+    while True:
+        print(f"当前用户: {student.id}")
+        print("1. 查看教室")
+        print("2. 预约教室")
+        print("0. 返回")
+
+        choice = input("请选择功能: ")
+
+        if choice == "1":
+            print("已选择：1. 查看教室")
+            pause()
+            clear_screen()
+            print_all_buildings_summary(root)
+            query_building_by_id(root)
+            print("返回")
+            pause()
+            clear_screen()
+
+        elif choice == "2":
+            print("已选择：2. 预约教室")
+            pause()
+            clear_screen()
+            c_id = input("请输入像查找的教室ID：")
+            query_classroom_schedule(c_id)
+
+        else:
+            print("\n输入无效。")
+            pause()
+            clear_screen()
 
 def student_menu(student, root, time):
     """登录成功后的学生菜单"""
     while True:
         print(f"\n======== 欢迎 {student.name} ========")
         print(f"当前用户: {student.id} | 班级: {student.class_id}")
-        print("1. 查看我的信息\n")
-        print("2. 修改密码\n")
-        print("3. 预约教室\n")
-        print("0. 退出登录\n")
+        print("1. 查看信息")
+        print("2. 修改密码")
+        print("3. 预约管理")
+        print("0. 退出登录")
         
         choice = input("请选择功能: ")
         
         if choice == "1":
-            show_student()
+            print("\n已选择：1. 查看信息")
             pause()
+            clear_screen()
+            show_student(student, time)
 
         elif choice == "2":
-            print("\n密码修改功能开发中...")
+            print("\n已选择：2. 修改密码")
             pause()
+            clear_screen()
+            new_student_password()
+
+        elif choice == "3":
+            print("\n已选择：3. 预约教室")
+            pause()
+            clear_screen()
+            reserve_classroom(student, root, time)
 
         elif choice == "0":
             print("\n已退出。")
             pause()
+            clear_screen()
             break
 
         else:
             print("\n输入无效。")
             pause()
+            clear_screen()

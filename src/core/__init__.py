@@ -22,9 +22,11 @@ from .time_date_clean import day_of_year
 from .time_date_clean import time_interval
 from .Segment_Tree import SegmentTree
 from .Schedule_System import load_course_data
+from .Schedule_System import load_reservation_data
 from .Schedule_System import Schedule_System
 from .Schedule_System import reserve
 from .User_System import load_courses_data
+from .User_System import query_classroom_schedule
 from .Manager_System import add_building
 from .Manager_System import add_area
 from .Manager_System import add_floor
