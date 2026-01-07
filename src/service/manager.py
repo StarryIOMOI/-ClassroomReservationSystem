@@ -166,13 +166,13 @@ def add_classrooms():
             print("\n已选择：3. 添加楼层")
             pause()
             clear_screen()
-            add_floor
+            add_floor()
 
         elif choice == "4":
             print("\n已选择：4. 添加教室")
             pause()
             clear_screen()
-            add_classroom
+            add_classroom()
 
         elif choice == "0":
             print("\n返回上一步。")
@@ -197,28 +197,28 @@ def modify_classrooms():
         choice = input("请选择功能: ")
 
         if choice == "1":
-            print("\n已选择：1. 管理教学楼")
+            print("\n功能正在开发中...")
             pause()
             clear_screen()
-            add_building()
+            # add_building()
 
         elif choice == "2":
-            print("\n已选择：2. 管理区域")
+            print("\n功能正在开发中...")
             pause()
             clear_screen()
-            add_area()
+            # add_area()
 
         elif choice == "3":
-            print("\n已选择：3. 管理楼层")
+            print("\n功能正在开发中...")
             pause()
             clear_screen()
-            add_floor()
+            # add_floor()
 
         elif choice == "4":
-            print("\n已选择：4. 管理教室")
+            print("\n功能正在开发中...")
             pause()
             clear_screen()
-            add_classroom()
+            # add_classroom()
 
         elif choice == "0":
             print("\n返回上一步。")
@@ -236,8 +236,8 @@ def add_user():
         print("\n======== 添加用户 ========")
         print("1. 添加教师")
         print("2. 添加学生")
-        print("3. 添加院系")
-        print("4. 添加班级")
+        print("3. 添加班级")
+        print("4. 添加院系")
         print("0. 返回")
 
         choice = input("请选择功能: ")
@@ -252,13 +252,13 @@ def add_user():
             print("\n已选择：2. 添加学生")
             pause()
             clear_screen()
-            add_student
+            add_student()
 
         elif choice == "3":
             print("\n已选择：3. 添加班级")
             pause()
             clear_screen()
-            add_class
+            add_class()
 
         elif choice == "4":
             print("\n功能正在开发中...")

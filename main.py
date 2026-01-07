@@ -1,5 +1,6 @@
 import sys
-from src.service.teacher_user import teacher_active, student_active, teacher_log_in, student_log_in
+from src.service.teacher_user import teacher_active,  teacher_log_in
+from src.service.student_user import student_active, student_log_in
 from src.utils.config import clear_screen, pause
     
 def log_in():

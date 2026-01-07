@@ -3,11 +3,9 @@ from .manager import manager_menu
 from src.utils.config import clear_screen, pause
 from src.core.Class import Teacher
 from src.core.Schedule_System import Schedule_System
-from src.core.User_System import load_courses_data
+from src.core.User_System import load_courses_data, query_classroom_schedule
 from src.core.time_date_clean import get_time
-from src.core.Classroom_System import (
-print_all_buildings_summary, query_building_by_id,
-query_classroom_schedule, build_tree)
+from src.core.Classroom_System import print_all_buildings_summary, query_building_by_id, build_tree
 from src.models.crud import (
 get_connection, activate_teacher_status,
 new_teacher_password)
@@ -46,10 +44,12 @@ def teacher_log_in():
         if row:
             if status == 0:
                 print("账号未激活！请先激活账号")
-                return None
+                pause()
+                return
             
             if password == password_input:
                 print("密码正确，登录成功！\n")
+                pause()
                 teacher = Teacher(row[0], row[1], row[2], row[3])
                 root = build_tree()
                 time = get_time()
@@ -57,7 +57,8 @@ def teacher_log_in():
             
         else:
             print("登录失败：账号不存在")
-            return None
+            pause()
+            return
         
 def show_teacher(teacher, time):
     """展示学生信息"""

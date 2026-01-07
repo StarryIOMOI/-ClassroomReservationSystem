@@ -24,7 +24,6 @@ class Classrooms:
           self.name = classroom_name
           self.floor_id = floor_id
           self.status = status
-          self.course = []
 
 class Courses:
      def __init__(self, course_id, course_name, class_id, class_name,classroom_id, classroom_name,

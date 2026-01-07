@@ -140,7 +140,8 @@ def add_classroom():
                 print("错误：所有字段都不能为空！")
                 return
 
-            create_classroom(classroom_id = c_id, classroom_name = c_name, floor_id = f_id)
+            create_classroom(classroom_id = c_id, classroom_name = c_name, 
+                             floor_id = f_id, status=1, capacity=30, type="普通教室")
         
         elif choice == "0":
             print("\n返回")

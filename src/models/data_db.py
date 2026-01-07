@@ -72,7 +72,6 @@ def init_db():
         CREATE TABLE IF NOT EXISTS classes (
             class_id TEXT PRIMARY KEY,
             class_name TEXT NOT NULL,
-            
                        
             CONSTRAINT uniq_class_id UNIQUE (class_id),
             CONSTRAINT uniq_class_name UNIQUE (class_name)
