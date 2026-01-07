@@ -1,8 +1,8 @@
 import sqlite3
 import os, sys
 from datetime import datetime, timedelta
-from Class import Courses, Reservation
-from time_date_clean import get_time, get_school_week, locate_time
+from src.core.Class import Courses, Reservation
+from src.core.time_date_clean import get_time, get_school_week, locate_time
 from src.models.crud import (
     load_course_data, load_reservation_data,
     get_connection, load_timeslots_data,

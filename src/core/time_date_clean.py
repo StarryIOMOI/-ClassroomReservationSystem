@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime as dt, timedelta
-from Class import Timenow
+from src.core.Class import Timenow
 from src.models.crud import load_semester_data, load_timeslots_data, get_connection
 
 # 获取当前时间

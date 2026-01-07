@@ -1,5 +1,5 @@
 import sqlite3, sys
-from time_date_clean import time_interval, get_school_week
+from src.core.time_date_clean import time_interval, get_school_week
 from src.utils.config import clear_screen, pause
 from src.models.crud import print_course_table       #临时
 from src.models.crud import (
