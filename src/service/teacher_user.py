@@ -1,9 +1,16 @@
 import sqlite3
-from core import Teacher, Schedule_System, load_courses_data, print_all_buildings_summary, query_building_by_id,  query_classroom_schedule
-from core import build_tree, get_time
-from models import get_connection, activate_teacher_status, new_teacher_password
-from utils import clear_screen, pause
 from .manager import manager_menu
+from utils.config import clear_screen, pause
+from core.Class import Teacher
+from core.Schedule_System import Schedule_System
+from core.User_System import load_courses_data
+from core.time_date_clean import get_time
+from core.Classroom_System import (
+print_all_buildings_summary, query_building_by_id,
+query_classroom_schedule, build_tree)
+from models.crud import (
+get_connection, activate_teacher_status,
+new_teacher_password)
 
 def teacher_active():
     id = input("请输入账号: ")

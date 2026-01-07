@@ -1,8 +1,7 @@
 import sqlite3
 from datetime import datetime as dt, timedelta
-from models import load_semester_data, load_timeslots_data
-from models import get_connection
-from core import Timenow
+from models.crud import load_semester_data, load_timeslots_data, get_connection
+from Class import Timenow
 
 # 获取当前时间
 current_time = dt.now()
@@ -70,8 +69,7 @@ def locate_time(semesters):
                     time = Timenow(s.name, week, s.id) 
             elif st.year < year_now < et.year:
                 week = get_school_week(start_date_str, current_date_str)
-                time = Timenow(s.name, week, s.id)
-                
+                time = Timenow(s.name, week, s.id) 
     if time:
         return time
     else:

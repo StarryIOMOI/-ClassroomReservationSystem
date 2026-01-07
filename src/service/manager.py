@@ -1,9 +1,10 @@
 import sqlite3, sys
-from core import (add_building, add_area, add_floor, add_classroom,
-                  add_teacher, add_student, add_class, add_semester,
-                  add_course)
-from models import get_connection
-from utils import clear_screen, pause
+from core.Manager_System import (
+    add_building, add_area, add_floor, add_classroom,
+    add_teacher, add_student, add_class, add_semester,
+    add_course)
+from models.crud import get_connection
+from utils.config import clear_screen, pause
 
 def manager_menu():
     while True:

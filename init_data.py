@@ -6,10 +6,11 @@ import sqlite3
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
-from data_db import get_connection, init_db
+from src.models.crud import get_connection
+from src.models.data_db import init_db
 # 从 crud.py 导入上一轮生成的函数
 # 如果你还没有更新 crud.py，请先更新，或者手动将那些函数复制到这里
-from crud import (
+from src.models.crud import (
     create_teacher_user, 
     create_student_user, 
     create_building, 
@@ -17,7 +18,8 @@ from crud import (
     create_floor, 
     create_classroom,
     create_class,
-    create_timeslot
+    create_timeslot,
+    create_semester
 )
 
 # ---------------------------------------------------------
@@ -139,6 +141,13 @@ def run_initialization():
             
             if create_timeslot(t_id, day, start, end):
                 success_count += 1
+
+    s_id = "2025-2026-1"
+    s_name = "2025-2026学年第一学期"
+    s_start = "2025-09-01"
+    s_end = "2026-01-10"
+    s_week = "19"
+    create_semester(s_id, s_name, s_start, s_end, s_week)
 
     print("=== 初始化完成 ===")
 

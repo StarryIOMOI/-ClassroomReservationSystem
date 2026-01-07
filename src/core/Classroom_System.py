@@ -1,7 +1,6 @@
 import sqlite3
 from .Tree import TreeNode
-from src.models import get_connection
-from models import (
+from models.crud import (
     load_building_data, load_area_data,
     load_floor_data, load_classroom_data
     )

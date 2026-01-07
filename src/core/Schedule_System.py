@@ -1,12 +1,8 @@
 import sqlite3
-from core import Courses
-from core import Reservation
-from core import Timeslots
-from core import Semesters
-from core import to_minute
-from core import SegmentTree
-from core import day_of_year
-from models import get_connection
+from Class import Courses, Reservation, Timeslots, Semesters
+from time_date_clean import to_minute, day_of_year
+from Segment_Tree import SegmentTree
+from models.crud import get_connection
 
 def load_course_data(classroom_id, semester_id): 
     conn = get_connection()

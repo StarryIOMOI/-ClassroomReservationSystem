@@ -1,15 +1,14 @@
 import sqlite3, sys
-from models import (
+from time_date_clean import time_interval, get_school_week
+from utils.config import clear_screen, pause
+from models.crud import print_course_table       #临时
+from models.crud import (
     load_building_data, load_area_data, load_floor_data,
     load_classroom_data, load_class_data, load_semester_data,
-    load_timeslots_data, load_special_semester_data)
-from models import (
+    load_timeslots_data, load_special_semester_data,
     create_student_user, create_teacher_user, create_building,
     create_area, create_floor, create_classroom, create_class,
     create_semester, create_course)
-from models import print_course_table       #临时
-from core import time_interval, get_school_week
-from utils import clear_screen, pause
 
 def add_building():
     print("\n======== 添加教学楼 ========")
@@ -251,8 +250,8 @@ def add_semester():
             print("\n--- 新增学期 ---")
             s_id = input("请输新增学期ID (例如 2025-2026-1): ").strip()
             s_name = input("请输入新增学期 (例如 2025-2026学年第一学期): ").strip()
-            s_start = input("请输入学期开始时间 (例如 2025-09-01)").strip()
-            s_end = input("请输入学期开始时间 (例如 2026-01-10)").strip()
+            s_start = input("请输入学期开始时间 (例如 2025-09-01): ").strip()
+            s_end = input("请输入学期开始时间 (例如 2026-01-10): ").strip()
             
             if not s_id or not s_name or not s_start or not s_end:
                 print("错误：所有字段都不能为空！")

@@ -1,9 +1,10 @@
 import sys
-from src.service import teacher_active, student_active, teacher_log_in, student_log_in
-from src.utils import clear_screen, pause
+from src.service.teacher_user import teacher_active, student_active, teacher_log_in, student_log_in
+from src.utils.config import clear_screen, pause
     
 def log_in():
     """登录"""
+    clear_screen()
     while True:
         clear_screen()
         print(f"\n======== 登录/激活 ========\n")

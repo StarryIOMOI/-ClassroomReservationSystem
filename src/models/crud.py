@@ -1,7 +1,7 @@
 import sqlite3
 import sys
 import os
-from core.Class import (
+from src.core.Class import (
     Buildings, Areas, Floors,
     Semesters, Classrooms, Timeslots
     )
@@ -9,7 +9,7 @@ from core.Class import (
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(current_dir)
-from models import get_connection
+from src.models.data_db import get_connection
 
 #========================================
 # 用户管理模块
@@ -230,7 +230,7 @@ def create_semester(semester_id, semester_name, date_start, date_end, total_week
         VALUES (?, ?, ?, ?, ?)
         '''
         
-        cursor.execute(sql, (semester_id, semester_name, date_start, date_end, str(total_weeks)))
+        cursor.execute(sql, (semester_id, semester_name, date_start, date_end, total_weeks))
         
         conn.commit()
         print(f"✅ 学期 '{semester_name}' 添加成功！")

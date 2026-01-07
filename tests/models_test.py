@@ -1,5 +1,4 @@
-from models import prepare_path
-from models import init_db
+from src.models.data_db import init_db, prepare_path
 
 if __name__ == '__main__':
     prepare_path()

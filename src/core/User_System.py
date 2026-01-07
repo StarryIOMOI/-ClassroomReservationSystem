@@ -1,12 +1,12 @@
 import sqlite3
 import os, sys
 from datetime import datetime, timedelta
-from core import Courses
-from models import get_connection
-from core import Courses, Reservation
-from core import load_course_data, load_reservation_data
-from core import get_time, get_school_week, locate_time
-from models import load_timeslots_data, load_semester_data
+from Class import Courses, Reservation
+from time_date_clean import get_time, get_school_week, locate_time
+from models.crud import (
+    load_course_data, load_reservation_data,
+    get_connection, load_timeslots_data,
+    load_semester_data)
 
 def get_date_range():
     """
