@@ -1,8 +1,8 @@
 import sqlite3, sys
 from time_date_clean import time_interval, get_school_week
-from utils.config import clear_screen, pause
-from models.crud import print_course_table       #临时
-from models.crud import (
+from src.utils.config import clear_screen, pause
+from src.models.crud import print_course_table       #临时
+from src.models.crud import (
     load_building_data, load_area_data, load_floor_data,
     load_classroom_data, load_class_data, load_semester_data,
     load_timeslots_data, load_special_semester_data,

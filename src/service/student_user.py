@@ -1,10 +1,10 @@
 import sqlite3
-from core.Class import Student
-from core.User_System import load_courses_data, query_classroom_schedule
-from core.Classroom_System import print_all_buildings_summary, query_building_by_id, build_tree
-from core.time_date_clean import get_time
-from models.crud import get_connection, activate_student_status, new_student_password
-from utils.config import clear_screen, pause
+from src.core.Class import Student
+from src.core.User_System import load_courses_data, query_classroom_schedule
+from src.core.Classroom_System import print_all_buildings_summary, query_building_by_id, build_tree
+from src.core.time_date_clean import get_time
+from src.models.crud import get_connection, activate_student_status, new_student_password
+from src.utils.config import clear_screen, pause
 
 def student_active():
     id = input("请输入账号: ")

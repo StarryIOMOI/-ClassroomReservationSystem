@@ -3,7 +3,7 @@ import os, sys
 from datetime import datetime, timedelta
 from Class import Courses, Reservation
 from time_date_clean import get_time, get_school_week, locate_time
-from models.crud import (
+from src.models.crud import (
     load_course_data, load_reservation_data,
     get_connection, load_timeslots_data,
     load_semester_data)

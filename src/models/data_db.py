@@ -4,7 +4,7 @@ import os
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(current_dir)
-from utils.config import DB_PATH
+from src.utils.config import DB_PATH
 db_name = 'data.db'
 
 def get_connection():

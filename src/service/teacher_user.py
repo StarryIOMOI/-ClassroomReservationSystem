@@ -1,14 +1,14 @@
 import sqlite3
 from .manager import manager_menu
-from utils.config import clear_screen, pause
-from core.Class import Teacher
-from core.Schedule_System import Schedule_System
-from core.User_System import load_courses_data
-from core.time_date_clean import get_time
-from core.Classroom_System import (
+from src.utils.config import clear_screen, pause
+from src.core.Class import Teacher
+from src.core.Schedule_System import Schedule_System
+from src.core.User_System import load_courses_data
+from src.core.time_date_clean import get_time
+from src.core.Classroom_System import (
 print_all_buildings_summary, query_building_by_id,
 query_classroom_schedule, build_tree)
-from models.crud import (
+from src.models.crud import (
 get_connection, activate_teacher_status,
 new_teacher_password)
 

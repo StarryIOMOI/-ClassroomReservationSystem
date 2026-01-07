@@ -2,7 +2,7 @@ import sqlite3
 from Class import Courses, Reservation, Timeslots, Semesters
 from time_date_clean import to_minute, day_of_year
 from Segment_Tree import SegmentTree
-from models.crud import get_connection
+from src.models.crud import get_connection
 
 def load_course_data(classroom_id, semester_id): 
     conn = get_connection()
