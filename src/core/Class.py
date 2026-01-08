@@ -19,7 +19,7 @@ class Floors:
           self.status = status
 
 class Classrooms:
-     def __init__(self, classroom_id, classroom_name, floor_id, status):
+     def __init__(self, classroom_id, classroom_name, floor_id = None, status = None):
           self.id = classroom_id
           self.name = classroom_name
           self.floor_id = floor_id
@@ -43,15 +43,18 @@ class Courses:
           self.semester_id = semester_id
 
 class Reservation:
-     def __init__(self, reservation_id, classroom_id, user_id, user_name, date, start, end, status):
+     def __init__(self, reservation_id, classroom_id, user_id, user_name, date, 
+                  start_timeslot_id, end_timeslot_id, weekday, status, semester_id=None):
           self.id = reservation_id
           self.classroom_id = classroom_id
           self.user_id = user_id
           self.user_name = user_name
           self.date = date
-          self.start = start
-          self.end = end
+          self.start_timeslot_id = start_timeslot_id
+          self.end_timeslot_id = end_timeslot_id
+          self.weekday = weekday 
           self.status = status
+          self.semester_id = semester_id
      
 class Semesters:
      def __init__(self, semester_id, semester_name, start, end, total_week):

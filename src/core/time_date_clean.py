@@ -3,6 +3,26 @@ from datetime import datetime as dt, timedelta
 from src.core.Class import Timenow
 from src.models.crud import load_semester_data, load_timeslots_data, get_connection
 
+MAX_SLOTS_PER_DAY = 13
+DAYS_PER_WEEK = 7
+TOTAL_TREE_SIZE = MAX_SLOTS_PER_DAY * DAYS_PER_WEEK
+
+SCHEDULE_DATA = [
+(1,  "08:00", "08:45"),
+(2,  "08:50", "09:35"),
+(3,  "09:55", "10:40"),
+(4,  "10:45", "11:30"),
+(5,  "11:35", "12:15"),
+(6,  "13:30", "14:15"),
+(7,  "14:20", "15:05"),
+(8,  "15:25", "16:10"),
+(9,  "16:15", "17:00"),
+(10, "17:05", "17:45"),
+(11, "18:30", "19:15"),
+(12, "19:20", "20:05"),
+(13, "20:10", "20:50"),
+]
+
 # 获取当前时间
 current_time = dt.now()
 year_now = current_time.year
@@ -99,7 +119,7 @@ def minute_of_tree(timeslots):
 def day_of_year(day):
     d = dt.strptime(day, "%Y-%m-%d")
     days = 0
-    day_in_month = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+    day_in_month = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     if (d.year % 4 == 0 and d.year % 100 != 0) or (d.year % 400 == 0):
         day_in_month[2] = 29
@@ -116,3 +136,56 @@ def time_interval(day1, day2):
 
     days_diff = abs((date2 - date1).days)
     return days_diff
+
+def parse_timeslot_id(timeslot_id):
+    """
+    解析 TS_星期_节数 格式
+    例如: 'TS_1_1' -> (1, 1)
+    """
+    try:
+        parts = timeslot_id.split('_')
+        weekday = int(parts[1])
+        slot = int(parts[2])
+        return weekday, slot
+    except (IndexError, ValueError):
+        print(f"❌ 错误: timeslot_id 格式无效 ({timeslot_id})")
+        return None, None
+
+def get_tree_index(timeslot_id):
+    """
+    将 timeslot_id 映射为线段树的线性下标 [0, 90]
+    公式: (星期 - 1) * 每天节数 + (节数 - 1)
+    """
+    weekday, slot = parse_timeslot_id(timeslot_id)
+    
+    if weekday is None:
+        return -1
+        
+    if not (1 <= weekday <= 7) or not (1 <= slot <= MAX_SLOTS_PER_DAY):
+        print(f"❌ 错误: timeslot_id 数值越界 ({timeslot_id})")
+        return -1
+
+    index = (weekday - 1) * MAX_SLOTS_PER_DAY + (slot - 1)
+    return index
+
+def get_timeslot_from_index(index):
+    """
+    将线段树下标反向映射回 (weekday, slot)
+    :return: (weekday, slot) 例如 (1, 1)
+    """
+    if index < 0 or index >= TOTAL_TREE_SIZE:
+        return None, None
+        
+    weekday = (index // MAX_SLOTS_PER_DAY) + 1
+    slot = (index % MAX_SLOTS_PER_DAY) + 1
+    return weekday, slot
+
+def get_id_from_index(index):
+    """
+    将线段树下标反向映射回 ID 字符串
+    :return: 'TS_1_1'
+    """
+    weekday, slot = get_timeslot_from_index(index)
+    if weekday:
+        return f"TS_{weekday}_{slot}"
+    return None

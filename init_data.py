@@ -1,6 +1,7 @@
 import sys
 import os
 import sqlite3
+from src.utils.config import DB_PATH
 
 # 确保能引用到同级目录下的模块
 current_dir = os.path.dirname(os.path.abspath(__file__))

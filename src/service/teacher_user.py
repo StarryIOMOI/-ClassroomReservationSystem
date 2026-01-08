@@ -54,6 +54,8 @@ def teacher_log_in():
                 root = build_tree()
                 time = get_time()
                 teacher_menu(teacher, root, time)
+            else:
+                print("ERROR: 密码错误！")
             
         else:
             print("登录失败：账号不存在")
@@ -139,6 +141,12 @@ def reserve_classroom(teacher, root, time):
             clear_screen()
             c_id = input("请输入像查找的教室ID：")
             query_classroom_schedule(c_id)
+
+        elif choice == "0":
+            print("\n返回上一步。")
+            pause()
+            clear_screen()
+            return
 
         else:
             print("\n输入无效。")

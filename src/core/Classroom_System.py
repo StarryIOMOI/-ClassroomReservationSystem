@@ -79,11 +79,11 @@ def query_building_by_id(root_node):
     print("\n--- 查询教学楼详情 ---")
     user_input = input("请输入教学楼 ID: ").strip()
 
-    if not user_input.isdigit():
-        print("❌ 错误: 请输入纯数字 ID。")
+    if not user_input:
+        print("❌ 错误: ID 不能为空。")
         return
 
-    target_id = int(user_input)
+    target_id = user_input 
 
     target_building = root_node.children.get(target_id)
 
@@ -92,4 +92,4 @@ def query_building_by_id(root_node):
         print_tree_recursive(target_building)
         print("\n" + "-"*30)
     else:
-        print(f"❌ 未找到 ID 为 {target_id} 的教学楼。")
+        print(f"❌ 未找到 ID 为 '{target_id}' 的教学楼。")

@@ -427,7 +427,7 @@ def load_semester_data():
     semester_rows = cursor.fetchall()
 
     semesters = [
-        Semesters(row["semester_id"], row["semester_name"], row["date_start"], row["date_end"], row["total_week"])
+        Semesters(row["semester_id"], row["semester_name"], row["date_start"], row["date_end"], row["total_weeks"])
         for row in semester_rows
     ]
 

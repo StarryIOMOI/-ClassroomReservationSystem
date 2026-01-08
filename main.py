@@ -34,12 +34,14 @@ def log_in():
             clear_screen()
             print(f"\n======== 教师激活 ========")
             teacher_active()
+            pause()
 
         elif choice == "4":
             pause()
             clear_screen()
             print(f"\n======== 学生激活 ========")
             student_active()
+            pause()
 
         elif choice == "0":
             print("退出。")
