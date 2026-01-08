@@ -25,6 +25,7 @@ SCHEDULE_DATA = [
 
 # 获取当前时间
 current_time = dt.now()
+c_date = current_time.strftime('%Y-%m-%d')
 year_now = current_time.year
 month_now = current_time.month
 day_now = current_time.day
@@ -64,32 +65,32 @@ def locate_time(semesters):
             if year_now == st.year:
                 if st.month == month_now and st.day <= day_now:
                     week = get_school_week(start_date_str, current_date_str)
-                    time = Timenow(s.name, week, s.id)
+                    time = Timenow(c_date, s.name, week, s.id)
                 elif st.month < month_now < et.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    time = Timenow(s.name, week, s.id) 
+                    time = Timenow(c_date, s.name, week, s.id) 
                 elif et.month == month_now and day_now <= et.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    time = Timenow(s.name, week, s.id) 
+                    time = Timenow(c_date, s.name, week, s.id) 
                     
         else:
             if year_now == st.year:
                 if month_now == st.month and day_now >= st.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    time = Timenow(s.name, week, s.id) 
+                    time = Timenow(c_date, s.name, week, s.id) 
                 elif month_now > st.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    time = Timenow(s.name, week, s.id) 
+                    time = Timenow(c_date, s.name, week, s.id) 
             elif year_now == et.year:
                 if month_now == et.month and day_now <= et.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    time = Timenow(s.name, week, s.id) 
+                    time = Timenow(c_date, s.name, week, s.id) 
                 elif month_now < et.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    time = Timenow(s.name, week, s.id) 
+                    time = Timenow(c_date, s.name, week, s.id) 
             elif st.year < year_now < et.year:
                 week = get_school_week(start_date_str, current_date_str)
-                time = Timenow(s.name, week, s.id) 
+                time = Timenow(c_date, s.name, week, s.id) 
     if time:
         return time
     else:

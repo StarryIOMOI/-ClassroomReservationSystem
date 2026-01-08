@@ -137,7 +137,7 @@ def reserve_classroom(student, root, time):
             c_id = input("请输入要预约的教室ID: ").strip()
             
             print(f"\n正在加载教室 {c_id} 的日程表...")
-            query_classroom_schedule(c_id)
+            query_classroom_schedule(c_id, time)
             print("-" * 30)
 
             date_str = input("请输入预约日期 (格式 YYYY-MM-DD): ").strip()

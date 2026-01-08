@@ -65,7 +65,8 @@ class Semesters:
           self.week = total_week
 
 class Timenow:
-     def __init__(self, name, week, semester_id):
+     def __init__(self, date, name, week, semester_id):
+          self.date = date
           self.name = name
           self.week = week
           self.semester_id = semester_id

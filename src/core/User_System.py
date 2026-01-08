@@ -41,7 +41,7 @@ def get_date_range():
         
     return date_list
 
-def query_classroom_schedule(classroom_id):
+def query_classroom_schedule(classroom_id, time):
     """
     查询指定教室在特定逻辑时间段内的所有安排（课程 + 预约）
     适配 data_db.py 和 Class.py 结构
@@ -85,7 +85,7 @@ def query_classroom_schedule(classroom_id):
     courses = load_courses_data(classroom_id, 0, current_semester_id)
 
     # 3.3 加载该教室本学期所有预约
-    reservations = load_reservation_data(classroom_id, current_semester_id)
+    reservations = load_reservation_data(classroom_id, current_semester_id, time.date)
 
     # 4. 按日期整合输出
     for date_obj in target_dates:
@@ -105,60 +105,62 @@ def query_classroom_schedule(classroom_id):
         daily_items = []
 
         # --- 处理课程 (Courses) ---
-        for course in courses:
-            # Class.py: course.week_start, week_end
-            # 1. 检查课程周次范围 (转换为 int 进行比较)
-            try:
-                c_start_week = int(course.week_start)
-                c_end_week = int(course.week_end)
-            except ValueError:
-                continue # 数据格式错误跳过
+        if courses:
+            for course in courses:
+                # Class.py: course.week_start, week_end
+                # 1. 检查课程周次范围 (转换为 int 进行比较)
+                try:
+                    c_start_week = int(course.week_start)
+                    c_end_week = int(course.week_end)
+                except ValueError:
+                    continue # 数据格式错误跳过
 
-            if c_start_week <= school_week <= c_end_week:
-                # 2. 获取时间段对象
-                # Class.py: start_timeslot_id
-                ts = timeslot_map.get(course.start_timeslot_id)
-                
-                # 3. 检查星期几是否匹配
-                # Class.py: Timeslots.weekday (需确认是 int 还是 str)
-                if ts and int(ts.weekday) == week_day_num:
+                if c_start_week <= school_week <= c_end_week:
+                    # 2. 获取时间段对象
+                    # Class.py: start_timeslot_id
+                    ts = timeslot_map.get(course.start_timeslot_id)
                     
-                    # 获取结束时间
-                    end_ts = timeslot_map.get(course.end_timeslot_id)
-                    
-                    # Class.py: Timeslots.start (不是 start_time)
-                    start_t = ts.start 
-                    end_t = end_ts.end if end_ts else ts.end
-                    time_display = f"{start_t}-{end_t}"
-                    
-                    item = {
-                        "type": "【课程】",
-                        "time_sort": start_t, # 排序键
-                        "time_display": time_display,
-                        "name": course.name,
-                        "user": course.teacher_name,
-                        "info": f"{course.class_name}"
-                    }
-                    daily_items.append(item)
+                    # 3. 检查星期几是否匹配
+                    # Class.py: Timeslots.weekday (需确认是 int 还是 str)
+                    if ts and int(ts.weekday) == week_day_num:
+                        
+                        # 获取结束时间
+                        end_ts = timeslot_map.get(course.end_timeslot_id)
+                        
+                        # Class.py: Timeslots.start (不是 start_time)
+                        start_t = ts.start 
+                        end_t = end_ts.end if end_ts else ts.end
+                        time_display = f"{start_t}-{end_t}"
+                        
+                        item = {
+                            "type": "【课程】",
+                            "time_sort": start_t, # 排序键
+                            "time_display": time_display,
+                            "name": course.name,
+                            "user": course.teacher_name,
+                            "info": f"{course.class_name}"
+                        }
+                        daily_items.append(item)
 
         # --- 处理预约 (Reservation) ---
-        for res in reservations:
-            # Class.py: Reservation.date, Reservation.status
-            if res.date == date_str:
-                # 状态检查 (假设 -1 是取消)
-                if res.status != -1: 
-                    
-                    # Class.py: Reservation 直接存了 start 和 end 字符串，不需要查 timeslot
-                    # 假设格式为 "HH:MM"
-                    item = {
-                        "type": "【预约】",
-                        "time_sort": res.start, 
-                        "time_display": f"{res.start}-{res.end}",
-                        "name": "个人预约", 
-                        "user": res.user_name,
-                        "info": f"ID: {res.id}" # Class.py: Reservation.id
-                    }
-                    daily_items.append(item)
+        if reservations:
+            for res in reservations:
+                # Class.py: Reservation.date, Reservation.status
+                if res.date == date_str:
+                    # 状态检查 (假设 -1 是取消)
+                    if res.status != -1: 
+                        
+                        # Class.py: Reservation 直接存了 start 和 end 字符串，不需要查 timeslot
+                        # 假设格式为 "HH:MM"
+                        item = {
+                            "type": "【预约】",
+                            "time_sort": res.start, 
+                            "time_display": f"{res.start}-{res.end}",
+                            "name": "个人预约", 
+                            "user": res.user_name,
+                            "info": f"ID: {res.id}" # Class.py: Reservation.id
+                        }
+                        daily_items.append(item)
 
         # --- 排序并打印 ---
         if not daily_items:

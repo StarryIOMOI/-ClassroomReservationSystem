@@ -54,14 +54,24 @@ def load_course_data(classroom_id, semester_id):
 def load_reservation_data(classroom_id, semester_id, week_dates): 
     """
     只加载本周涉及的预约记录
-    :param week_dates: 本周日期字符串列表 ['YYYY-MM-DD', ...]
+    :param week_dates: 本周日期字符串列表 ['YYYY-MM-DD', ...] 或 单个日期字符串 'YYYY-MM-DD'
     """
     conn = get_connection()
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
+    # 逻辑优化：兼容单个字符串输入
+    if isinstance(week_dates, str):
+        week_dates = [week_dates]
+    
+    # 逻辑优化：如果是空列表，直接返回空结果
+    if not week_dates:
+        conn.close()
+        return []
+
     # 使用 IN 子句筛选日期
     placeholders = ','.join('?' for _ in week_dates)
+    
     query = f"""
         SELECT * FROM reservation
         WHERE classroom_id = ? 
@@ -70,19 +80,22 @@ def load_reservation_data(classroom_id, semester_id, week_dates):
           AND status != -1
     """
     
-    # 参数拼接：classroom_id, semester_id, 然后是日期列表
     params = [classroom_id, semester_id] + week_dates
     
-    cursor.execute(query, params)
-    reservation_rows = cursor.fetchall()
-
+    try:
+        cursor.execute(query, params)
+        reservation_rows = cursor.fetchall()
+    except Exception as e:
+        print(f"数据库查询出错: {e}")
+        reservation_rows = []
+    
     reservations = []
     for row in reservation_rows:
-        # 解析 weekday。如果数据库没有直接存weekday，可以通过 row["date"] 转换，
-        # 但根据第一阶段，我们建议数据库存了或者通过 ID 解析。
-        # 这里假设数据库列已更新为第一阶段设计
+        # 修正：优先使用 reservation_id，兼容 id
+        res_id = row["reservation_id"] if "reservation_id" in row.keys() else row["id"]
+        
         res = Reservation(
-            row["id"], # reservation_id
+            res_id, 
             row["classroom_id"], 
             row["user_id"], 
             row["user_name"], 
@@ -123,7 +136,7 @@ class Schedule_System:
 
     def refresh_tree(self):
         """重新加载数据并重建线段树"""
-        # 1. 重置树 (SegmentTree 需要有 reset 方法，或者新建一个)
+        # 1. 重置树
         self.tree = SegmentTree(TOTAL_TREE_SIZE)
         
         # 2. 加载数据
@@ -167,17 +180,13 @@ class Schedule_System:
             print("❌ 开始时间不能晚于结束时间")
             return True
 
-        # 查询线段树: query(node, start, end, l, r)
-        # 注意：SegmentTree.query 的参数定义需匹配 src/core/Segment_Tree.py
+        # 查询线段树
         result = self.tree.query(1, 0, TOTAL_TREE_SIZE - 1, l, r)
         return result == 1
 
 def reserve(classroom_id, user_id, user_name, date_str, start_ts_id, end_ts_id):
     """
     执行预约的核心业务逻辑
-    :param date_str: 'YYYY-MM-DD'
-    :param start_ts_id: 'TS_1_1'
-    :param end_ts_id: 'TS_1_2'
     """
     conn = get_connection()
     conn.row_factory = sqlite3.Row
@@ -185,28 +194,24 @@ def reserve(classroom_id, user_id, user_name, date_str, start_ts_id, end_ts_id):
 
     try:
         # 1. 前置检查：教室状态
-        cursor.execute("SELECT status FROM classrooms WHERE id = ?", (classroom_id,))
+        # 修正：WHERE id -> WHERE classroom_id
+        cursor.execute("SELECT status FROM classrooms WHERE classroom_id = ?", (classroom_id,))
         row = cursor.fetchone()
         if not row:
             print("❌ 教室不存在")
             return False
         
-        # 假设 status=1 为可预约状态
         if row['status'] != 1:
             print(f"❌ 教室当前状态不可预约 (Status: {row['status']})")
             return False
 
         # 2. 构建与查询 (冲突检测)
-        # 实例化系统会自动加载课程和已有预约建立线段树
         system = Schedule_System(classroom_id)
         
-        # 校验请求的日期是否在本周内 (因为 Schedule_System 是基于本周构建的)
         if date_str not in system.week_dates:
             print("❌ 目前仅支持预约本周内的时间")
-            # 实际生产中可能需要支持跨周，这里简化逻辑匹配 Schedule_System 的设计
             return False
         
-        # 校验节次ID中的星期几是否与 date_str 对应的星期几一致
         req_weekday, _ = parse_timeslot_id(start_ts_id)
         date_obj = datetime.strptime(date_str, "%Y-%m-%d")
         if req_weekday != date_obj.isoweekday():
@@ -220,8 +225,6 @@ def reserve(classroom_id, user_id, user_name, date_str, start_ts_id, end_ts_id):
         # 3. 执行预约 (DB 写入)
         timenow = get_time()
         current_semester = timenow.semester_id if timenow else 0
-        
-        # 解析 weekday 用于存储
         weekday, _ = parse_timeslot_id(start_ts_id)
 
         sql = '''
@@ -238,17 +241,13 @@ def reserve(classroom_id, user_id, user_name, date_str, start_ts_id, end_ts_id):
             start_ts_id,
             end_ts_id,
             weekday,
-            1, # status 1 表示有效预约
+            1, 
             current_semester
         ))
 
         # 4. 更新教室状态
-        # 注意：这里按要求将 status 改为 2。
-        # 业务逻辑提示：这通常意味着教室变为"使用中"或"有课"。
-        # 如果只想标记"被占用但其他人能不能约取决于冲突检测"，则不需要改 classroom status，
-        # 除非 classroom status = 2 表示 "已被某社团包场，彻底不可用"。
-        # 此处严格遵循要求执行。
-        cursor.execute("UPDATE classrooms SET status = 2 WHERE id = ?", (classroom_id,))
+        # 修正：WHERE id -> WHERE classroom_id
+        cursor.execute("UPDATE classrooms SET status = 2 WHERE classroom_id = ?", (classroom_id,))
 
         conn.commit()
         print(f"✅ 预约成功！{date_str} | {start_ts_id} 至 {end_ts_id}")
@@ -266,15 +265,15 @@ def reserve(classroom_id, user_id, user_name, date_str, start_ts_id, end_ts_id):
 
 def cancel(reservation_id):
     """
-    简单的取消预约逻辑
+    取消预约
     """
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("UPDATE reservation SET status = -1 WHERE id = ?", (reservation_id,))
+        # 修正：WHERE id -> WHERE reservation_id
+        cursor.execute("UPDATE reservation SET status = -1 WHERE reservation_id = ?", (reservation_id,))
         conn.commit()
         print("✅ 预约已取消")
-        # 可以在这里判断是否需要把 classroom status 改回 1，视具体业务逻辑而定
         return True
     except Exception as e:
         print(f"取消失败: {e}")

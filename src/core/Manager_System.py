@@ -287,11 +287,11 @@ def add_course():
         if choice == "1":
             print("\n--- 新增课程 ---")
             CRS_id = input("请输新增课程ID (例如 CRS2403060101): ").strip()
-            CRS_name = input("请输入新增学期 (例如 计算机导论): ").strip()
+            CRS_name = input("请输入新增课程名 (例如 计算机导论): ").strip()
             C_id = input("请输入课程开设班级ID (例如 C240306)").strip()
             c_id = input("请输入课程开设教室ID (例如 c00103101)").strip()
             T_id = input("请输入课程教师ID (例如 T202503001)").strip()
-            s_id = input("请输入课程开设学期ID (例如 T202503001)").strip()
+            s_id = input("请输入课程开设学期ID (例如 2025-2026-1)").strip()
             TS_start_id = input("请输入课程上课时间点ID (例如 TS_1_01)").strip()
             TS_end_id = input("请输入课程下课时间点ID (例如 TS_1_02)").strip()
             week_start = input("请输入课程开设周 (例如 1)").strip()
@@ -302,11 +302,11 @@ def add_course():
                 print("错误：所有字段都不能为空！")
                 return
             
-            semester = load_special_semester_data()
+            semester = load_special_semester_data(s_id)
             
-            s = str(week_start)
-            e = str(week_end)
-            l = str(semester.week)
+            s = int(week_start)
+            e = int(week_end)
+            l = int(semester.week)
 
             if 0 >= s or s > e or e > l:
                 print("错误：开设时间存在问题")

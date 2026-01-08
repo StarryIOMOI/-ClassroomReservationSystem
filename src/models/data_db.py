@@ -183,7 +183,7 @@ def init_db():
             user_id TEXT NOT NULL,
             user_name TEXT NOT NULL,
             date TEXT NOT NULL,
-            start_time_slot_id TEXT NOT NULL,
+            start_timeslot_id TEXT NOT NULL,
             end_timeslot_id TEXT NOT NULL,
             semester_id TEXT NOT NULL,
             status INTEGER NOT NULL,

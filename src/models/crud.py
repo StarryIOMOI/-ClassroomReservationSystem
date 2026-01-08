@@ -456,19 +456,24 @@ def load_special_semester_data(semester_id):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT * FROM  reservation
+        SELECT * FROM semester
         WHERE semester_id = ?
     """, (semester_id,))
 
-    semester_rows = cursor.fetchall()
-
-    semesters = [
-        Semesters(row["semester_id"], row["semester_name"], row["date_start"], row["date_end"], row["total_week"])
-        for row in semester_rows
-    ]
+    row = cursor.fetchone()
 
     conn.close()
-    return semesters
+
+    if row:
+        return Semesters(
+            row["semester_id"], 
+            row["semester_name"], 
+            row["date_start"], 
+            row["date_end"], 
+            row["total_weeks"]
+        )
+    else:
+        return None
 
 #========================================
 # 修改数据
