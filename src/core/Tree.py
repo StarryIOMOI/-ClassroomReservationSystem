@@ -9,4 +9,9 @@ class TreeNode:
         self.children[node.id] = node
 
     def __repr__(self):
-        return f"TreeNode(id={self.id}, name={self.name}, type={self.type}, children={len(self.children)})"
+        return (
+            f"TreeNode(id={self.id}, "
+            f"name={self.name}, "
+            f"type={self.type}, "
+            f"children={len(self.children)})"
+        )

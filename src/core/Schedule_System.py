@@ -222,8 +222,6 @@ def reserve(classroom_id, user_id, user_name, date_str, start_ts_id, end_ts_id):
         ))
 
         # 4. 更新教室状态
-        # === 修改点：确保状态为 1 (开放/可预约)，而不是 2 (锁定) ===
-        # 这样其他用户仍可预约该教室的非冲突时间段
         cursor.execute("UPDATE classrooms SET status = 1 WHERE classroom_id = ?", (classroom_id,))
 
         conn.commit()
