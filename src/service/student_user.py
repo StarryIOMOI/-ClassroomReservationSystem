@@ -140,6 +140,26 @@ def reserve_classroom(student, root, time):
             query_classroom_schedule(c_id, time)
             print("-" * 30)
 
+            while True:
+                print("1. 继续预约")
+                print("0. 返回")
+
+                x_choice = input("请选择功能: ")
+
+                if x_choice == "1":
+                    pause()
+                    break
+
+                elif x_choice == "0":
+                    print("\n返回上一步。")
+                    pause()
+                    clear_screen()
+                    return
+
+                else:
+                    print("\n输入无效。")
+                    pause()
+
             date_str = input("请输入预约日期 (格式 YYYY-MM-DD): ").strip()
             try:
                 date_obj = datetime.strptime(date_str, "%Y-%m-%d")

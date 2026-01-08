@@ -145,15 +145,35 @@ def reserve_classroom(teacher, root, time):
             clear_screen()
 
         elif choice == "2":
-            print("已选择：2. 预约教室")
+            print("已选择：2. 申请预约")
             print("-" * 30)
             
-            c_id = input("请输入要预约的教室ID：").strip()
+            c_id = input("请输入要预约的教室ID: ").strip()
             
             print(f"\n正在加载教室 {c_id} 的日程表...")
-            query_classroom_schedule(c_id)
+            query_classroom_schedule(c_id, time)
             print("-" * 30)
             
+            while True:
+                print("1. 继续预约")
+                print("0. 返回")
+
+                x_choice = input("请选择功能: ")
+
+                if x_choice == "1":
+                    pause()
+                    break
+
+                elif x_choice == "0":
+                    print("\n返回上一步。")
+                    pause()
+                    clear_screen()
+                    return
+
+                else:
+                    print("\n输入无效。")
+                    pause()
+
             date_str = input("请输入预约日期 (格式 YYYY-MM-DD): ").strip()
             try:
                 date_obj = datetime.strptime(date_str, "%Y-%m-%d")
@@ -177,7 +197,7 @@ def reserve_classroom(teacher, root, time):
             start_ts_id = f"TS_{weekday}_{start_slot}"
             end_ts_id = f"TS_{weekday}_{end_slot}"
 
-            print(f"\n[确认信息] 教师预约: {c_id}")
+            print(f"\n[确认信息] 申请预约: {c_id}")
             print(f"时间: {date_str} (周{weekday}) | 第 {start_slot} 节 至 第 {end_slot} 节")
             confirm = input("确认提交? (y/n): ")
 
