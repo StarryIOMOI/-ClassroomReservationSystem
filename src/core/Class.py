@@ -24,11 +24,10 @@ class Classrooms:
           self.name = classroom_name
           self.floor_id = floor_id
           self.status = status
-          self.course = []
 
 class Courses:
      def __init__(self, course_id, course_name, class_id, class_name,classroom_id, classroom_name,
-     teacher_id, teacher_name, week_start, week_end, timeslot_id, semester_id):
+     teacher_id, teacher_name, week_start, week_end, start_timeslot_id, end_timeslot_id, semester_id):
           self.id = course_id
           self.name = course_name
           self.class_id = class_id
@@ -39,7 +38,8 @@ class Courses:
           self.teacher_name = teacher_name
           self.week_start = week_start
           self.week_end = week_end
-          self.timeslot_id = timeslot_id
+          self.start_timeslot_id = start_timeslot_id
+          self.end_timeslot_id = end_timeslot_id
           self.semester_id = semester_id
 
 class Reservation:
@@ -62,10 +62,10 @@ class Semesters:
           self.week = total_week
 
 class Timenow:
-     def __init__(self, name, week, semester):
+     def __init__(self, name, week, semester_id):
           self.name = name
           self.week = week
-          self.semester = semester
+          self.semester_id = semester_id
 
 class Timeslots:
      def __init__(self, id, weekday, start_time, end_time):
@@ -83,7 +83,7 @@ class Student:
           self.class_id = class_id
 
 class Teacher:
-     def __init__(self, status, teacher_id, password_hash, name, class_id, club_id):
+     def __init__(self, status, teacher_id, password_hash, name, class_id = None, club_id = None):
           self.status = status
           self.id = teacher_id
           self.password = password_hash

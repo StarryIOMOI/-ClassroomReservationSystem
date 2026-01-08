@@ -1,12 +1,9 @@
 import sqlite3
-from .Tree import TreeNode
-from src.models import get_connection
-from src.models import (
-    load_building_data,
-    load_area_data,
-    load_floor_data,
-    load_classroom_data
-)
+from src.core.Tree import TreeNode
+from src.models.crud import (
+    load_building_data, load_area_data,
+    load_floor_data, load_classroom_data
+    )
 
 def build_tree():
     buildings = load_building_data()

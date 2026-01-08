@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime as dt, timedelta
-from models import get_connection
-from core import Semesters, Timenow, Timeslots
+from src.core.Class import Timenow
+from src.models.crud import load_semester_data, load_timeslots_data, get_connection
 
 # 获取当前时间
 current_time = dt.now()
@@ -13,52 +13,20 @@ def time_now():
     return current_time.strftime("%Y-%m-%d %H:%M:%S")
 
 def get_time():
-    semesters = load_semester()
+    semesters = load_semester_data()
     timenow_obj = locate_time(semesters)
     return timenow_obj
 
-def load_semester():
-    conn = get_connection()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM semester")
-    semester_rows = cursor.fetchall()
-
-    semesters = [
-        Semesters(row["semester_id"], row["semester_name"], row["date_start"], row["date_end"], row["total_week"])
-        for row in semester_rows
-    ]
-
-    conn.close()
-    return semesters
-
-def load_timeslots():
-    conn = get_connection()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM timeslot")
-    timeslot_rows = cursor.fetchall()
-
-    timeslots = [
-        Timeslots(row["timeslot_id"], row["weekday"], row["start_time"], row["end_time"])
-        for row in timeslot_rows
-    ]
-
-    conn.close()
-    return timeslots
-
-def get_school_week(start_str, current_str):
+def get_school_week(start_str, end_str):
     start = dt.strptime(start_str, "%Y-%m-%d").date()
-    current = dt.strptime(current_str, "%Y-%m-%d").date()
+    end = dt.strptime(end_str, "%Y-%m-%d").date()
     # 找出开学日所在周的周一
     start_monday = start - timedelta(days=start.isoweekday() - 1)
-    # 找出当前日期所在周的周一
-    current_monday = current - timedelta(days=current.isoweekday() - 1)
+    # 找出结束日期所在周的周一
+    end_monday = end - timedelta(days=end.isoweekday() - 1)
     # 计算两个周一之间相差的完整周数
-    weeks_diff = (current_monday - start_monday).days // 7
-    # 当前周数
+    weeks_diff = (end_monday - start_monday).days // 7
+    # 周数
     week_number = weeks_diff + 1
     
     return week_number
@@ -76,34 +44,36 @@ def locate_time(semesters):
             if year_now == st.year:
                 if st.month == month_now and st.day <= day_now:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s)
+                    time = Timenow(s.name, week, s.id)
                 elif st.month < month_now < et.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
                 elif et.month == month_now and day_now <= et.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
                     
         else:
             if year_now == st.year:
                 if month_now == st.month and day_now >= st.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
                 elif month_now > st.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
             elif year_now == et.year:
                 if month_now == et.month and day_now <= et.day:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
                 elif month_now < et.month:
                     week = get_school_week(start_date_str, current_date_str)
-                    return Timenow(s.name, week, s) 
+                    time = Timenow(s.name, week, s.id) 
             elif st.year < year_now < et.year:
                 week = get_school_week(start_date_str, current_date_str)
-                return Timenow(s.name, week, s) 
-    
-    return None
+                time = Timenow(s.name, week, s.id) 
+    if time:
+        return time
+    else:
+        return None
 
 def to_minute(time):
     _time = dt.strptime(time, "%H:%M")
@@ -139,3 +109,10 @@ def day_of_year(day):
 
     days += d.day
     return days
+
+def time_interval(day1, day2):
+    date1 = dt.strptime(day1, "%Y-%m-%d")
+    date2 = dt.strptime(day2, "%Y-%m-%d")
+
+    days_diff = abs((date2 - date1).days)
+    return days_diff

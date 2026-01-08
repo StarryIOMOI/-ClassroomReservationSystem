@@ -1,45 +1,55 @@
 import sys
-from src.service import student_log_in, teacher_log_in, student_menu, teacher_menu
-from src.core import build_tree, get_time
-from src.utils import clscreen, pause
+from src.service.teacher_user import teacher_active,  teacher_log_in
+from src.service.student_user import student_active, student_log_in
+from src.utils.config import clear_screen, pause
     
 def log_in():
     """登录"""
+    clear_screen()
     while True:
+        clear_screen()
         print(f"\n======== 登录/激活 ========\n")
         print("1. 教师登录")
         print("2. 学生登录")
+        print("3. 教师激活")
+        print("4. 学生激活")
         print("0. 退出登录")
         
         choice = input("请选择功能: ")
         
         if choice == "1":
-            print(f"\n======== 教师登录 ========")
-            id = input("请输入账号: ")
-            password = input("请输入密码: ")
             pause()
-            teacher = teacher_log_in(id, password)
-            root = build_tree()
-            time = get_time()
-            teacher_menu(teacher, root, time)
+            clear_screen()
+            print(f"\n======== 教师登录 ========")
+            teacher_log_in()
 
         elif choice == "2":
-            print(f"\n======== 学生登录 ========")
-            id = input("请输入账号: ")
-            password = input("请输入密码: ")
             pause()
-            student = student_log_in(id, password)
-            root = build_tree()
-            time = get_time()
-            student_menu(student, root, time)
+            clear_screen()
+            print(f"\n======== 学生登录 ========")
+            student_log_in()
+        
+        elif choice == "3":
+            pause()
+            clear_screen()
+            print(f"\n======== 教师激活 ========")
+            teacher_active()
+
+        elif choice == "4":
+            pause()
+            clear_screen()
+            print(f"\n======== 学生激活 ========")
+            student_active()
 
         elif choice == "0":
             print("退出。")
+            clear_screen()
             sys.exit(0)
 
         else:
             print("输入无效。")
             pause()
+            clear_screen()
 
 if __name__ == '__main__':
     log_in()

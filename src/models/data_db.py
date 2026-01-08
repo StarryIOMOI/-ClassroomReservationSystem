@@ -4,7 +4,7 @@ import os
 
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(current_dir)
-from utils import DB_PATH
+from src.utils.config import DB_PATH
 db_name = 'data.db'
 
 def get_connection():
@@ -30,7 +30,7 @@ def init_db():
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = ON;")
 
-        #教室用户表
+        #教师用户表
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS teacher_users (
             status INTEGER NOT NULL, 
@@ -72,7 +72,6 @@ def init_db():
         CREATE TABLE IF NOT EXISTS classes (
             class_id TEXT PRIMARY KEY,
             class_name TEXT NOT NULL,
-            
                        
             CONSTRAINT uniq_class_id UNIQUE (class_id),
             CONSTRAINT uniq_class_name UNIQUE (class_name)
@@ -156,7 +155,8 @@ def init_db():
             teacher_name TEXT NOY NULL,
             week_start TEXT NOT NULL,
             week_end TEXT NOT NULL,
-            timeslot_id TEXT NOT NULL,
+            start_timeslot_id TEXT NOT NULL,
+            end_timeslot_id TEXT NOT NULL,
             semester_id TEXT NOT NULL,
                        
             CONSTRAINT uniq_course_id UNIQUE (course_id)
